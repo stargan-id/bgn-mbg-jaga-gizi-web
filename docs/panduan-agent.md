@@ -11,6 +11,14 @@
 - pemanggilan data selalu melewati actions 
 - schema zod gunakan pattern namaobjectSchema contoh : organisasiSchema
 - Schema for create (without id and timestamps)
+- semua page/halaman menggunakan komponen yang modular
+- page selalu server function, selalu gunakan komponen modular untuk setiap bagian page 
+- jika ada perlu state atau interaksi pada page, maka komponen dapat di wrap dengan komponen client
+- penamaan nama komponen menggunakan bahasa Indonesias
+- ikuti kaidan UI/UX yang baik dan konsisten dan mobile responsive
+- gunakan style sidebar untuk menu-menu
+- flow dan page juga harus mobile friendly sehingga jika ada isian yang di sub halaman 2 tinggka ke bawah, maka gunakan modek sub-halaman seperti yang biasa ada pada mobile apps, saat sub halaman sembunyikan tombol2 umum dan fokus pada satu tugas form 
+
 
 contoh
 
