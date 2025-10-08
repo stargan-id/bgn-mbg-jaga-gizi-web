@@ -4,6 +4,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import MapContainerLeaflet from '@/components/peta/MapContainerLeaflet';
 import SearchFilterPanel from '@/components/peta/SearchFilterPanel';
+import ActionableDashboard from '@/components/peta/ActionableDashboard';
 import { SppgInfoOverlay } from '@/components/peta/SppgInfoOverlay';
 import { SppgMapData } from '@/lib/services/sppg';
 
@@ -83,6 +84,12 @@ export function PetaContent({ initialSppgData, initialStats }: PetaContentProps)
           <SearchFilterPanel
             sppgData={transformedInitialData}
             onFilteredDataChange={handleFilteredDataChange}
+          />
+          
+          {/* Actionable Dashboard */}
+          <ActionableDashboard
+            filteredData={filteredSppgData}
+            totalData={transformedInitialData}
           />
           
           {/* Legend */}
