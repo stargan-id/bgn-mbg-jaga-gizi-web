@@ -11,6 +11,7 @@ import {
   KondisiBahan,
   StatusAkg
 } from '@prisma/client';
+import { generateSppgData, insertSppgBatch } from './seeders/sppg-generator';
 
 
 async function main() {
@@ -597,104 +598,32 @@ async function main() {
     )
   );
 
-  // Create SPPG with coordinates
-  console.log('🏢 Creating SPPG locations...');
-  const sppgData = [
-    {
-      nama: 'SPPG Jakarta Pusat 01',
-      alamat: 'Jl. Medan Merdeka Barat No. 15, Jakarta Pusat',
-      kontak: '+62 21 3456789',
-      kapasitasProduksi: 1500,
-      statusVerifikasi: StatusVerifikasi.APPROVED,
-      longitude: 106.8229,
-      latitude: -6.1744,
-      organisasiId: provinsiOrgs[0].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Surabaya Timur 03',
-      alamat: 'Jl. Ahmad Yani No. 42, Surabaya Timur',
-      kontak: '+62 31 8765432',
-      kapasitasProduksi: 2000,
-      statusVerifikasi: StatusVerifikasi.APPROVED,
-      longitude: 112.7378,
-      latitude: -7.2504,
-      organisasiId: provinsiOrgs[1].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Bandung Selatan 02',
-      alamat: 'Jl. Soekarno Hatta No. 189, Bandung Selatan',
-      kontak: '+62 22 9876543',
-      kapasitasProduksi: 1200,
-      statusVerifikasi: StatusVerifikasi.UNDER_REVIEW,
-      longitude: 107.6098,
-      latitude: -6.9175,
-      organisasiId: provinsiOrgs[2].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Makassar Utara 01',
-      alamat: 'Jl. Perintis Kemerdekaan No. 78, Makassar',
-      kontak: '+62 411 234567',
-      kapasitasProduksi: 1800,
-      statusVerifikasi: StatusVerifikasi.APPROVED,
-      longitude: 119.4221,
-      latitude: -5.1477,
-      organisasiId: provinsiOrgs[3].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Medan Barat 05',
-      alamat: 'Jl. Sisingamangaraja No. 23, Medan',
-      kontak: '+62 61 5432109',
-      kapasitasProduksi: 2200,
-      statusVerifikasi: StatusVerifikasi.APPROVED,
-      longitude: 98.6722,
-      latitude: 3.5952,
-      organisasiId: provinsiOrgs[4].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Jakarta Timur 07',
-      alamat: 'Jl. Raya Bekasi No. 234, Jakarta Timur',
-      kontak: '+62 21 7778888',
-      kapasitasProduksi: 1300,
-      statusVerifikasi: StatusVerifikasi.UNDER_REVIEW,
-      longitude: 106.9057,
-      latitude: -6.2088,
-      organisasiId: provinsiOrgs[0].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Surabaya Barat 12',
-      alamat: 'Jl. Darmo No. 156, Surabaya Barat',
-      kontak: '+62 31 9990001',
-      kapasitasProduksi: 1600,
-      statusVerifikasi: StatusVerifikasi.REJECTED,
-      longitude: 112.7194,
-      latitude: -7.2775,
-      organisasiId: provinsiOrgs[1].id,
-      createdBy: 'system'
-    },
-    {
-      nama: 'SPPG Bandung Utara 05',
-      alamat: 'Jl. Dago No. 67, Bandung Utara',
-      kontak: '+62 22 1112223',
-      kapasitasProduksi: 1100,
-      statusVerifikasi: StatusVerifikasi.DRAFT,
-      longitude: 107.6186,
-      latitude: -6.8946,
-      organisasiId: provinsiOrgs[2].id,
-      createdBy: 'system'
-    }
-  ];
-
-  const sppgList = await Promise.all(
-    sppgData.map((sppg) =>
-      db.sppg.create({ data: sppg })
-    )
-  );
+  // Create SPPG with coordinates - Generate 1000 SPPG using Faker
+  console.log('🏢 Creating 1000 SPPG locations...');
+  
+  // Distribute SPPG across all provincial organizations
+  const totalSppg = 1000;
+  const sppgPerOrg = Math.floor(totalSppg / provinsiOrgs.length);
+  const remainder = totalSppg % provinsiOrgs.length;
+  
+  let allSppgData: any[] = [];
+  
+  for (let i = 0; i < provinsiOrgs.length; i++) {
+    const orgId = provinsiOrgs[i].id;
+    const count = i < remainder ? sppgPerOrg + 1 : sppgPerOrg;
+    
+    console.log(`   Generating ${count} SPPG for ${provinsiOrgs[i].nama}...`);
+    const orgSppgData = generateSppgData(orgId, count);
+    allSppgData = allSppgData.concat(orgSppgData);
+  }
+  
+  // Insert all SPPG in batches for better performance
+  await insertSppgBatch(db, allSppgData, 50);
+  
+  // Get all created SPPG for further processing
+  const sppgList = await db.sppg.findMany({
+    orderBy: { createdAt: 'asc' }
+  });
 
   // Create sample documents for SPPG
   console.log('📋 Creating SPPG documents...');
