@@ -2,9 +2,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapContainer } from '@/components/peta/MapContainer';
+import MapContainerLeaflet from '@/components/peta/MapContainerLeaflet';
 import { SppgInfoOverlay } from '@/components/peta/SppgInfoOverlay';
-import { MapControls } from '@/components/peta/MapControls';
 import { SppgMapData } from '@/lib/services/sppg';
 
 interface PetaContentProps {
@@ -42,11 +41,10 @@ export function PetaContent({ initialSppgData, initialStats }: PetaContentProps)
       <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 md:p-6">
         {/* Controls Panel - Mobile: Top, Desktop: Left */}
         <div className="w-full lg:w-80 lg:flex-shrink-0 space-y-4">
-          <MapControls
-            sppgData={initialSppgData}
-            onFilterChange={handleFilterChange}
-            totalStats={initialStats}
-          />
+          <div className="bg-white rounded-lg border p-4">
+            <h3 className="font-semibold text-gray-900 mb-3">Filter SPPG</h3>
+            <p className="text-sm text-gray-600">Total: {initialSppgData.length} SPPG</p>
+          </div>
           
           {/* Legend */}
           <div className="bg-white rounded-lg border p-4">
@@ -79,12 +77,7 @@ export function PetaContent({ initialSppgData, initialStats }: PetaContentProps)
         {/* Map Container - Mobile: Bottom, Desktop: Right */}
         <div className="flex-1 relative">
           <div className="bg-white rounded-lg border overflow-hidden h-full min-h-[500px] lg:min-h-[700px]">
-            <MapContainer
-              sppgData={filteredSppgData}
-              stats={initialStats}
-              onMarkerClick={handleMarkerClick}
-              height="100%"
-            />
+            <MapContainerLeaflet className="h-full" />
           </div>
         </div>
       </div>

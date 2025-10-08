@@ -1,7 +1,7 @@
 # Dokumentasi Halaman Peta Nasional SPPG
 
 ## Overview
-Halaman Peta Nasional SPPG merupakan implementasi interaktif untuk menampilkan sebaran Satuan Pelayanan Pemenuhan Gizi (SPPG) di seluruh Indonesia menggunakan Apple MapKit JS dengan UI/UX yang responsif dan modular.
+Halaman Peta Nasional SPPG merupakan implementasi interaktif untuk menampilkan sebaran Satuan Pelayanan Pemenuhan Gizi (SPPG) di seluruh Indonesia menggunakan Leaflet dengan OpenStreetMap dengan UI/UX yang responsif dan modular.
 
 ## Fitur Utama
 
