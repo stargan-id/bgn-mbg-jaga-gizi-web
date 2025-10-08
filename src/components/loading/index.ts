@@ -1,8 +1,8 @@
-// Re-export shared loading components for dashboard compatibility
+// Loading Components
 export { 
   DashboardSkeleton, 
   KpiCardSkeleton, 
   ListSkeleton, 
   LoadingState, 
   EmptyState 
-} from '@/components/loading';
+} from './LoadingStates';

@@ -1,8 +1,7 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Minus, Activity, Users, AlertTriangle } from 'lucide-react';
+import { MetricGrid, MetricData } from '@/components/common';
+import { Activity, Users, AlertTriangle } from 'lucide-react';
 import { KpiMetrics } from '@/types/dashboard';
 
 interface KartuKpiProps {
@@ -10,7 +9,7 @@ interface KartuKpiProps {
 }
 
 export function KartuKpi({ data }: KartuKpiProps) {
-  const kpiItems = [
+  const kpiItems: MetricData[] = [
     {
       title: 'Tingkat Pelaporan Harian',
       value: `${data.dailyReportingRate}%`,
@@ -49,49 +48,12 @@ export function KartuKpi({ data }: KartuKpiProps) {
     }
   ];
 
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'up':
-        return <TrendingUp className="w-4 h-4 text-green-600" />;
-      case 'down':
-        return <TrendingDown className="w-4 h-4 text-red-600" />;
-      default:
-        return <Minus className="w-4 h-4 text-yellow-600" />;
-    }
-  };
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-      {kpiItems.map((item, index) => {
-        const Icon = item.icon;
-        return (
-          <Card key={index} className="relative overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                {item.title}
-              </CardTitle>
-              <div className={`p-2 rounded-full ${item.bgColor}`}>
-                <Icon className={`w-4 h-4 ${item.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-2xl font-bold">
-                    {item.value}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Target: {item.target}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {getTrendIcon(item.trend)}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </div>
+    <MetricGrid 
+      metrics={kpiItems}
+      columns={{ default: 1, md: 2, xl: 4 }}
+      gap={4}
+      className="mb-6"
+    />
   );
 }

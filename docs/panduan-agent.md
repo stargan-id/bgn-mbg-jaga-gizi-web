@@ -1,5 +1,6 @@
 # Panduang Agent AI
 
+- package manager menggunakan pnpm
 - schema.prisma untuk core aplikasi penamaan tabel dan kolom dalam bahasa indonesia, untuk existing RBAC biarkan as it is 
 - pastikan zod schema juga konsisten dengan schema database, jika schema hanya dibutuhkan untuk form dapat menyesaikan dan menambahkan sesuai kebutuhan form
 - selalu lihat schema.prisma 
@@ -18,6 +19,8 @@
 - ikuti kaidan UI/UX yang baik dan konsisten dan mobile responsive
 - gunakan style sidebar untuk menu-menu
 - flow dan page juga harus mobile friendly sehingga jika ada isian yang di sub halaman 2 tinggka ke bawah, maka gunakan modek sub-halaman seperti yang biasa ada pada mobile apps, saat sub halaman sembunyikan tombol2 umum dan fokus pada satu tugas form 
+- gunakan zustand untuk manajemen state antar halaman
+
 
 
 contoh
