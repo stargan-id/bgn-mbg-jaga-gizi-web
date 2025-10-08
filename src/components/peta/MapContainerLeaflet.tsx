@@ -38,9 +38,15 @@ interface SPPGData {
 
 interface MapContainerLeafletProps {
   className?: string
+  filteredData?: SPPGData[]
+  onMarkerClick?: (sppg: SPPGData) => void
 }
 
-const MapContainerLeaflet = ({ className = '' }: MapContainerLeafletProps) => {
+const MapContainerLeaflet = ({ 
+  className = '', 
+  filteredData = [],
+  onMarkerClick 
+}: MapContainerLeafletProps) => {
   const [sppgData, setSppgData] = useState<SPPGData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -146,10 +152,11 @@ const MapContainerLeaflet = ({ className = '' }: MapContainerLeafletProps) => {
         zoom={defaultZoom}
         className="rounded-lg"
       >
-        {sppgData.map((sppg) => (
+        {(filteredData.length > 0 ? filteredData : sppgData).map((sppg) => (
           <MarkerWithPopup 
             key={sppg.id} 
-            data={sppg} 
+            data={sppg}
+            onMarkerClick={onMarkerClick}
           />
         ))}
         <MapControls className="absolute top-4 left-4 z-[1000]" />
@@ -157,7 +164,10 @@ const MapContainerLeaflet = ({ className = '' }: MapContainerLeafletProps) => {
       
       <div className="absolute bottom-4 left-4 z-[1000] bg-white p-2 rounded-lg shadow-md">
         <p className="text-xs text-gray-600">
-          Showing {sppgData.length} SPPG locations
+          Showing {(filteredData.length > 0 ? filteredData : sppgData).length} SPPG locations
+          {filteredData.length > 0 && filteredData.length !== sppgData.length && (
+            <span className="text-blue-600"> (filtered from {sppgData.length})</span>
+          )}
         </p>
       </div>
     </div>

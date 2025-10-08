@@ -19,6 +19,7 @@ interface SPPGData {
 
 interface MarkerWithPopupProps {
   data: SPPGData
+  onMarkerClick?: (sppg: SPPGData) => void
 }
 
 // Custom icon untuk marker dengan warna berdasarkan status
@@ -61,11 +62,21 @@ const getStatusBadgeVariant = (status: string) => {
   }
 }
 
-const MarkerWithPopup = ({ data }: MarkerWithPopupProps) => {
+const MarkerWithPopup = ({ data, onMarkerClick }: MarkerWithPopupProps) => {
   const position: LatLngExpression = [data.latitude, data.longitude]
 
+  const handleMarkerClick = () => {
+    onMarkerClick?.(data)
+  }
+
   return (
-    <Marker position={position} icon={createIcon(data.status)}>
+    <Marker 
+      position={position} 
+      icon={createIcon(data.status)}
+      eventHandlers={{
+        click: handleMarkerClick,
+      }}
+    >
       <Popup maxWidth={300} className="rounded-lg">
         <Card className="border-0 shadow-none">
           <CardHeader className="pb-2">
