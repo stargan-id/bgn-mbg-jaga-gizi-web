@@ -186,9 +186,10 @@ model Sppg {
   
   // Relations
   dokumenSppg      DokumenSppg[]
-  checklistHarian  ChecklistHarian[]
-  laporanBahanBaku LaporanBahanBaku[]
-  menuHarian       MenuHarian[]
+  checklistHarian   ChecklistHarian[]
+  laporanBahanBaku  LaporanBahanBaku[]
+  menuHarian        MenuHarian[]
+  kegiatanPengolahan KegiatanPengolahan[]
   
   @@map("sppg")
 }
@@ -274,10 +275,13 @@ model LaporanBahanBaku {
   sppg            Sppg             @relation(fields: [sppgId], references: [id], onDelete: Cascade)
   pemasokId       String           @map("pemasok_id")
   pemasok         Pemasok          @relation(fields: [pemasokId], references: [id])
-  createdBy       String           @map("created_by")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedBy       String?          @map("updated_by")
-  updatedAt       DateTime?        @updatedAt @map("updated_at")
+  createdBy         String                @map("created_by")
+  createdAt         DateTime              @default(now()) @map("created_at")
+  updatedBy         String?               @map("updated_by")
+  updatedAt         DateTime?             @updatedAt @map("updated_at")
+  
+  // Relations
+  penggunaanBahanBaku PenggunaanBahanBaku[]
   
   @@map("laporan_bahan_baku")
 }
@@ -305,7 +309,8 @@ model MenuHarian {
   updatedAt        DateTime?         @updatedAt @map("updated_at")
   
   // Relations
-  komponenMenu     KomponenMenu[]
+  komponenMenu       KomponenMenu[]
+  kegiatanPengolahan KegiatanPengolahan[]
   
   @@unique([sppgId, tanggal])
   @@map("menu_harian")
@@ -345,6 +350,93 @@ model StandarAkg {
   updatedAt         DateTime? @updatedAt @map("updated_at")
   
   @@map("standar_akg")
+}
+
+// Kegiatan Pengolahan Makanan - Core processing activity model
+model KegiatanPengolahan {
+  id                    String                 @id @default(cuid())
+  tanggalPengolahan     DateTime               @map("tanggal_pengolahan")
+  jamMulai              DateTime               @map("jam_mulai")
+  jamSelesai            DateTime?              @map("jam_selesai")
+  jenisPengolahan       JenisPengolahan        @map("jenis_pengolahan")
+  targetPorsi           Int                    @map("target_porsi")
+  porsiTerealisasi      Int?                   @map("porsi_terealisasi")
+  suhuPengolahan        Float?                 @map("suhu_pengolahan")
+  metodePengolahan      String                 @map("metode_pengolahan") // Direbus, Dikukus, Digoreng, dll
+  penanggungJawab       String                 @map("penanggung_jawab") // Nama cook/chef
+  statusKegiatan        StatusKegiatan         @default(BERLANGSUNG) @map("status_kegiatan")
+  catatanProses         String?                @map("catatan_proses")
+  catatanMutu           String?                @map("catatan_mutu")
+  fotoProses            String[]               @map("foto_proses")
+  
+  // Relations
+  sppgId                String                 @map("sppg_id")
+  sppg                  Sppg                   @relation(fields: [sppgId], references: [id], onDelete: Cascade)
+  menuHarianId          String?                @map("menu_harian_id")
+  menuHarian            MenuHarian?            @relation(fields: [menuHarianId], references: [id])
+  
+  // Audit fields
+  createdBy             String                 @map("created_by")
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedBy             String?                @map("updated_by")
+  updatedAt             DateTime?              @updatedAt @map("updated_at")
+  
+  // Child relations
+  penggunaanBahanBaku   PenggunaanBahanBaku[]
+  kontrolMutu           KontrolMutuPengolahan[]
+  
+  @@map("kegiatan_pengolahan")
+}
+
+// Detail penggunaan bahan baku dalam kegiatan pengolahan
+model PenggunaanBahanBaku {
+  id                     String              @id @default(cuid())
+  namaBahan              String              @map("nama_bahan")
+  jenisBahan             JenisBahan          @map("jenis_bahan")
+  jumlahDigunakan        Float               @map("jumlah_digunakan")
+  satuan                 String
+  batchNumber            String?             @map("batch_number") // Untuk traceability
+  tanggalExpiry          DateTime?           @map("tanggal_expiry")
+  kondisiBahan           KondisiBahan        @map("kondisi_bahan")
+  sumberBahan            String?             @map("sumber_bahan") // Dari laporan bahan baku mana
+  catatanPenggunaan      String?             @map("catatan_penggunaan")
+  
+  // Relations
+  kegiatanPengolahanId   String              @map("kegiatan_pengolahan_id")
+  kegiatanPengolahan     KegiatanPengolahan  @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
+  laporanBahanBakuId     String?             @map("laporan_bahan_baku_id") // Link ke stok bahan baku
+  laporanBahanBaku       LaporanBahanBaku?   @relation(fields: [laporanBahanBakuId], references: [id])
+  
+  createdAt              DateTime            @default(now()) @map("created_at")
+  updatedAt              DateTime?           @updatedAt @map("updated_at")
+  
+  @@map("penggunaan_bahan_baku")
+}
+
+// Kontrol mutu selama proses pengolahan
+model KontrolMutuPengolahan {
+  id                     String              @id @default(cuid())
+  waktuKontrol           DateTime            @map("waktu_kontrol")
+  tahapPengolahan        TahapPengolahan     @map("tahap_pengolahan")
+  suhu                   Float?
+  tekstur                String?
+  warna                  String?
+  aroma                  String?
+  rasa                   String?
+  kebersihanAlat         Boolean             @map("kebersihan_alat")
+  higienePetugas         Boolean             @map("higiene_petugas")
+  statusMutu             StatusMutu          @map("status_mutu")
+  tindakanKoreksi        String?             @map("tindakan_koreksi")
+  fotoEvidence           String[]            @map("foto_evidence")
+  petugasKontrol         String              @map("petugas_kontrol")
+  
+  // Relations
+  kegiatanPengolahanId   String              @map("kegiatan_pengolahan_id")
+  kegiatanPengolahan     KegiatanPengolahan  @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
+  
+  createdAt              DateTime            @default(now()) @map("created_at")
+  
+  @@map("kontrol_mutu_pengolahan")
 }
 
 // Log aktivitas dan audit trail
@@ -428,4 +520,37 @@ enum StatusAkg {
   HAMPIR_MEMENUHI
   TIDAK_MEMENUHI
   BELUM_DIEVALUASI
+}
+
+enum JenisPengolahan {
+  SARAPAN
+  MAKAN_SIANG
+  MAKAN_MALAM
+  SNACK
+  KHUSUS
+}
+
+enum StatusKegiatan {
+  PERSIAPAN
+  BERLANGSUNG
+  SELESAI
+  DIHENTIKAN
+  GAGAL
+}
+
+enum TahapPengolahan {
+  PERSIAPAN_BAHAN
+  PENCUCIAN
+  PEMOTONGAN
+  PEMASAKAN
+  PENYAJIAN
+  PEMBERSIHAN
+}
+
+enum StatusMutu {
+  SANGAT_BAIK
+  BAIK
+  CUKUP
+  PERLU_PERBAIKAN
+  DITOLAK
 }
