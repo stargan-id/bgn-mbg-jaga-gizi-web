@@ -33,6 +33,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+!.env.example
+
 # vercel
 .vercel
 
@@ -50,3 +52,16 @@ next-env.d.ts
 # gemini cache
 /.gemini
 /.idea
+
+# key 
+*.p8
+*.jks
+*.keystore
+*.mobileprovision
+*.cer
+*.der
+*.crt
+*.p12
+*.pem
+*.pfx
+*.p7b

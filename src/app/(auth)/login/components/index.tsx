@@ -103,14 +103,14 @@ const LoginForm = () => {
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium text-slate-700">
-            Email / NIP
+            Email
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
             <Input
               id="email"
               type="email"
-              placeholder="Masukkan email atau NIP Anda"
+              placeholder="Masukkan email Anda"
               {...register("email")}
               className={`pl-10 h-12 ${
                 errors.email 
