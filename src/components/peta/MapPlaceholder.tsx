@@ -17,6 +17,13 @@ export function MapPlaceholder({
   height = '600px',
   className = '' 
 }: MapPlaceholderProps) {
+  console.log('📍 MapPlaceholder rendered with:', {
+    sppgDataCount: sppgData.length,
+    sppgDataSample: sppgData.slice(0, 1),
+    height,
+    className
+  });
+
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'APPROVED':
@@ -43,9 +50,12 @@ export function MapPlaceholder({
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-gray-400">
             <MapPin className="w-16 h-16 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Peta Indonesia - Mode Development</h3>
-            <p className="text-sm max-w-md">
-              MapKit JS token belum dikonfigurasi. Silakan set <code>NEXT_PUBLIC_MAPKIT_JS_TOKEN</code> di .env.local
+            <h3 className="text-lg font-semibold mb-2">Peta Nasional SPPG</h3>
+            <p className="text-sm max-w-md mb-2">
+              Peta interaktif menampilkan sebaran {sppgData.length} lokasi SPPG di seluruh Indonesia
+            </p>
+            <p className="text-xs text-blue-600 font-medium">
+              Klik pada item SPPG untuk melihat detail lengkap
             </p>
           </div>
         </div>
@@ -84,8 +94,9 @@ export function MapPlaceholder({
                   </div>
                   
                   <div className="text-xs text-gray-400 flex-shrink-0">
-                    <div>{sppg.latitude.toFixed(4)}</div>
-                    <div>{sppg.longitude.toFixed(4)}</div>
+                    <div className="font-mono">{sppg.latitude.toFixed(4)}</div>
+                    <div className="font-mono">{sppg.longitude.toFixed(4)}</div>
+                    <div className="mt-1 text-blue-600">Lihat Detail →</div>
                   </div>
                 </div>
               ))}

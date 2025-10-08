@@ -36,6 +36,8 @@ export function PetaContent({ initialSppgData, initialStats }: PetaContentProps)
 
   return (
     <div className="h-full flex flex-col">
+
+      
       {/* Mobile-first layout */}
       <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 md:p-6">
         {/* Controls Panel - Mobile: Top, Desktop: Left */}
@@ -79,6 +81,7 @@ export function PetaContent({ initialSppgData, initialStats }: PetaContentProps)
           <div className="bg-white rounded-lg border overflow-hidden h-full min-h-[500px] lg:min-h-[700px]">
             <MapContainer
               sppgData={filteredSppgData}
+              stats={initialStats}
               onMarkerClick={handleMarkerClick}
               height="100%"
             />

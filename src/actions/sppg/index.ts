@@ -6,9 +6,8 @@ import { mockSppgMapData } from '@/lib/mock-data';
 
 export async function getSppgMapDataAction(): Promise<ActionResponse<SppgMapData[]>> {
   try {
-    // Use mock data for development
-    // const sppgData = await getAllSppgForMap();
-    const sppgData = mockSppgMapData;
+    // Get real data from database after seeding
+    const sppgData = await getAllSppgForMap();
     
     return {
       success: true,
@@ -70,6 +69,8 @@ export async function getSppgByRegionAction(organisasiId: string): Promise<Actio
     };
   }
 }
+
+export type SppgStats = typeof getSppgStats extends () => Promise<infer R> ? R : never;
 
 export async function getSppgStatsAction(): Promise<ActionResponse<Awaited<ReturnType<typeof getSppgStats>>>> {
   try {

@@ -1,6 +1,12 @@
 import { Sppg, StatusVerifikasi } from '@prisma/client';
 import { db } from '@/lib/db';
 
+export interface SppgStats {
+  total: number;
+  active: number;
+  byStatus: Record<StatusVerifikasi, number>;
+}
+
 export interface SppgWithOrganisasi extends Sppg {
   organisasi: {
     id: string;
@@ -114,7 +120,8 @@ export async function getSppgByRegion(organisasiId: string): Promise<SppgMapData
   }));
 }
 
-export async function getSppgStats() {
+
+export async function getSppgStats(): Promise<SppgStats> {
   const stats = await db.sppg.groupBy({
     by: ['statusVerifikasi'],
     _count: {

@@ -12,6 +12,9 @@ export default async function PetaPage() {
   const sppgData = sppgResult.success ? sppgResult.data : [];
   const stats = statsResult.success ? statsResult.data : null;
 
+  console.log('SPPG Data Count:', sppgData.length);
+  console.log('SPPG Data Sample:', sppgData.slice(0, 2));
+
   return (
     <ProtectedLayout 
       title="Peta Nasional SPPG"

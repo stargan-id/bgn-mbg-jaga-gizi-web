@@ -1,22 +1,18 @@
-﻿"use client";
-
 import { useIsMobile } from '@/hooks/use-mobile';
-import { SppgMapData, SppgStats } from '@/lib/services/sppg';
+import { DirectionJson } from '@/types/mapkit.types';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
-import { Marker,DirectionJson } from "@/types/map.types";
-
+import React, { useMemo } from 'react';
 
 // Use the working AppleMapKitMap component from tenant folder
 const AppleMapKitMap = dynamic(
-  () => import('@/components/peta/AppleMapkitMap').then(mod => ({ default: mod.AppleMapKitMap })),
+  () => import('@/components/tenant/AppleMapKitMap').then(mod => ({ default: mod.AppleMapKitMap })),
   { 
     ssr: false,
     loading: () => (
       <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <div className="text-blue-600 font-medium">Loading SPPG Map...</div>
+          <div className="text-blue-600 font-medium">Loading Fleet Map...</div>
           <div className="text-blue-500 text-sm mt-1">Powered by Apple MapKit JS</div>
         </div>
       </div>
@@ -24,37 +20,44 @@ const AppleMapKitMap = dynamic(
   }
 );
 
-//initialSppgData={sppgData} initialStats={stats}
+interface FleetVehicle {
+  id: string;
+  name: string;
+  route: string;
+  routeCode: string;
+  status: 'active' | 'idle' | 'maintenance';
+  driver: string;
+  passengers: number;
+  capacity: number;
+  location: { lat: number; lng: number };
+  speed: number;
+  lastUpdate: string;
+}
 
-interface MapContainerProps {
-  sppgData: SppgMapData[];
-  stats: SppgStats;
-  onMarkerClick?: (sppg: SppgMapData) => void;
-  height?: string;
-  className?: string;
+interface FleetMapContainerProps {
+  vehicles: FleetVehicle[];
+  directions?: DirectionJson[];
+  selectedVehicle: string | null;
   children?: React.ReactNode;
 }
 
-export const MapContainer = ({ sppgData, stats, onMarkerClick, height, className, children }: MapContainerProps) => {
+export const FleetMapContainer: React.FC<FleetMapContainerProps> = ({
+  vehicles,
+  directions,
+  selectedVehicle,
+  children
+}) => {
   const isMobile = useIsMobile();
 
+  // Convert vehicles to map markers format
   const markers = useMemo(() => {
-    return sppgData.map(sppg => {
-      const color = sppg.statusVerifikasi === 'APPROVED' ? 'green' : 
-                    sppg.statusVerifikasi === 'UNDER_REVIEW' ? 'yellow' : 'gray';
-      const marker:Marker = {
-        coordinate: {
-          lat: sppg.latitude,
-          lng: sppg.longitude
-        },
-        title: sppg.nama,
-        subtitle: sppg.alamat,
-        color: color,
-        id: sppg.id
-      };
-      return marker;
-    });
-  }, [sppgData]);
+    return vehicles.map(vehicle => ({
+      lat: vehicle.location.lat,
+      lng: vehicle.location.lng,
+      title: `${vehicle.id} • Line ${vehicle.routeCode}`,
+      icon: "🚐" // Vehicle icon for fleet markers
+    }));
+  }, [vehicles]);
 
   return (
     <div className="w-full h-full overflow-hidden relative">
@@ -96,8 +99,7 @@ export const MapContainer = ({ sppgData, stats, onMarkerClick, height, className
       {children}
     </div>
   );
-}
-
+};
 
 export const Legend = () => {
   return (
