@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { StatusVerifikasi } from '@prisma/client';
+import { generateAccurateCoordinates, getRandomKecamatan } from './indonesia-coordinates';
 
 // Indonesian provinces and their representative cities/kabupaten
 const INDONESIAN_PROVINCES = [
@@ -165,20 +166,24 @@ function generateSppgName(type: string, kabupaten: string): string {
   return faker.helpers.arrayElement(options);
 }
 
-// Generate realistic address
-function generateAddress(kabupaten: string): string {
+// Generate realistic address with kecamatan
+function generateAddress(provinsi: string, kabupaten: string): string {
   const jalan = [
     'Jl. Merdeka', 'Jl. Sudirman', 'Jl. Diponegoro', 'Jl. Ahmad Yani', 
     'Jl. Gatot Subroto', 'Jl. Veteran', 'Jl. Pahlawan', 'Jl. Kartini',
-    'Jl. Hayam Wuruk', 'Jl. Imam Bonjol', 'Jl. Cendrawasih', 'Jl. Melati'
+    'Jl. Hayam Wuruk', 'Jl. Imam Bonjol', 'Jl. Cendrawasih', 'Jl. Melati',
+    'Jl. Dr. Wahidin', 'Jl. Cut Nyak Dien', 'Jl. HR. Rasuna Said', 'Jl. MT Haryono'
   ];
   
   const kelurahan = [
     'Kelurahan Central', 'Kelurahan Barat', 'Kelurahan Timur', 'Kelurahan Utara',
-    'Kelurahan Selatan', 'Kelurahan Indah', 'Kelurahan Sejahtera', 'Kelurahan Makmur'
+    'Kelurahan Selatan', 'Kelurahan Indah', 'Kelurahan Sejahtera', 'Kelurahan Makmur',
+    'Kelurahan Mandiri', 'Kelurahan Harapan', 'Kelurahan Maju', 'Kelurahan Damai'
   ];
+  
+  const kecamatan = getRandomKecamatan(provinsi, kabupaten);
 
-  return `${faker.helpers.arrayElement(jalan)} No. ${faker.number.int({ min: 1, max: 999 })}, ${faker.helpers.arrayElement(kelurahan)}, ${kabupaten}`;
+  return `${faker.helpers.arrayElement(jalan)} No. ${faker.number.int({ min: 1, max: 999 })}, ${faker.helpers.arrayElement(kelurahan)}, Kec. ${kecamatan}, ${kabupaten}`;
 }
 
 // Generate contact info (Indonesian phone format)
@@ -189,16 +194,7 @@ function generateContact(): string {
   return `${prefix}-${number}`;
 }
 
-// Generate coordinates for Indonesia
-function generateIndonesianCoordinates(): { latitude: number; longitude: number } {
-  // Indonesia coordinates range approximately
-  // Latitude: -11° to 6° (South to North)
-  // Longitude: 95° to 141° (West to East)
-  return {
-    latitude: faker.number.float({ min: -10.9, max: 5.9, fractionDigits: 6 }),
-    longitude: faker.number.float({ min: 95.1, max: 140.9, fractionDigits: 6 })
-  };
-}
+// This function is now replaced by generateAccurateCoordinates from indonesia-coordinates.ts
 
 export interface SppgSeedData {
   nama: string;
@@ -223,8 +219,8 @@ export function generateSppgData(organisasiId: string, count: number = 1000): Sp
     const kabupaten = faker.helpers.arrayElement(province.kabupaten);
     const type = faker.helpers.arrayElement(SPPG_TYPES);
     
-    // Generate coordinates
-    const coordinates = generateIndonesianCoordinates();
+    // Generate accurate coordinates for specific kabupaten
+    const coordinates = generateAccurateCoordinates(province.nama, kabupaten);
     
     // Generate capacity based on type
     let kapasitasProduksi: number;
@@ -284,7 +280,7 @@ export function generateSppgData(organisasiId: string, count: number = 1000): Sp
     
     const sppg: SppgSeedData = {
       nama: generateSppgName(type, kabupaten),
-      alamat: generateAddress(kabupaten),
+      alamat: generateAddress(province.nama, kabupaten),
       kontak: generateContact(),
       kapasitasProduksi,
       statusVerifikasi: faker.helpers.arrayElement(statusDistribution),
