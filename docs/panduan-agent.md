@@ -1,51 +1,97 @@
-# Panduang Agent AI
+# Panduan Pengembangan untuk Agen AI
 
-- package manager menggunakan pnpm
-- schema.prisma untuk core aplikasi penamaan tabel dan kolom dalam bahasa indonesia, untuk existing RBAC biarkan as it is 
-- pastikan zod schema juga konsisten dengan schema database, jika schema hanya dibutuhkan untuk form dapat menyesaikan dan menambahkan sesuai kebutuhan form
-- selalu lihat schema.prisma 
-- nama fungsi pada service gunakan bahasa inggris
-- nama fungsi pada action gunakan bahasa inggris
-- action return selalu menggunakan ActionResponse.ts yang ada pada folder actions
-- untuk setiap fungsi yang dibuat pada services pastikan mempunya return type yang didefinisikan pada @/types
-- flow data akan selalu page -> actions/[nama-koleksi]/index.ts|spesific.ts -> lib/services/[nama-service.tsx]
-- pemanggilan data selalu melewati actions 
-- schema zod gunakan pattern namaobjectSchema contoh : organisasiSchema
-- Schema for create (without id and timestamps)
-- semua page/halaman menggunakan komponen yang modular
-- page selalu server function, selalu gunakan komponen modular untuk setiap bagian page 
-- jika ada perlu state atau interaksi pada page, maka komponen dapat di wrap dengan komponen client
-- penamaan nama komponen menggunakan bahasa Indonesias
-- ikuti kaidan UI/UX yang baik dan konsisten dan mobile responsive
-- gunakan style sidebar untuk menu-menu
-- flow dan page juga harus mobile friendly sehingga jika ada isian yang di sub halaman 2 tinggka ke bawah, maka gunakan modek sub-halaman seperti yang biasa ada pada mobile apps, saat sub halaman sembunyikan tombol2 umum dan fokus pada satu tugas form 
-- gunakan zustand untuk manajemen state antar halaman
+Dokumen ini berisi aturan dan praktik terbaik yang wajib diikuti dalam pengembangan aplikasi untuk memastikan konsistensi, kualitas, dan kemudahan pemeliharaan kode.
 
+## 1\. Konvensi Umum & Struktur Proyek
 
+  - **Package Manager**: Proyek ini secara eksklusif menggunakan **`pnpm`**. Pastikan semua instalasi dan manajemen dependensi dilakukan melalui `pnpm`.
+  - **Alur Data (Data Flow)**: Alur data di aplikasi ini bersifat searah dan terstruktur sebagai berikut:
+    **`Halaman (Page) -> Actions -> Services`**
+      - **Halaman (`/app`)**: Berfungsi sebagai *Server Component* untuk menampilkan data.
+      - **Actions (`/actions`)**: Jembatan antara client/server dan logika bisnis. Semua pemanggilan data dari halaman **wajib** melalui *actions*.
+      - **Services (`/lib/services`)**: Tempat semua logika bisnis inti dan interaksi langsung dengan database (Prisma) berada.
+  - **Struktur Return Actions**: Setiap fungsi *action* **wajib** mengembalikan objek sesuai dengan tipe yang didefinisikan pada `ActionResponse.ts` untuk standarisasi respons.
+  - **Definisi Tipe (Types)**: Setiap fungsi pada *services* harus memiliki *return type* yang jelas dan didefinisikan di dalam direktori `@/types`.
 
-contoh
+-----
 
-```ts
-export const createNamaobjectSchema = namaobjectSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-```
-- Schema for update (id required, other fields optional)
+## 2\. Aturan Penamaan (Naming Convention)
 
-contoh
+Konsistensi penamaan adalah kunci utama dalam proyek ini.
 
-```ts
-export const updateNamaObjectSchema = namaObjectSchema.partial().extend({
-  id: z.string(),
-});
-```
+  - **Database (`schema.prisma`)**:
+      - Nama tabel dan kolom menggunakan **Bahasa Indonesia** (contoh: `pengguna`, `nama_lengkap`).
+      - **Pengecualian**: Skema yang sudah ada untuk RBAC (Role-Based Access Control) dibiarkan apa adanya (*as is*).
+  - **Fungsi (Functions)**:
+      - Nama fungsi pada **Services** menggunakan **Bahasa Inggris** (contoh: `getUserById`, `createProduct`).
+      - Nama fungsi pada **Actions** menggunakan **Bahasa Inggris** (contoh: `getUser`, `createProductAction`).
+  - **Komponen React**:
+      - Penamaan file dan komponen menggunakan **Bahasa Indonesia** dengan format *PascalCase* (contoh: `TombolSimpan.tsx`, `FormulirPengguna.tsx`).
+  - **Skema Zod**:
+      - Menggunakan format `namaObjectSchema` dalam *camelCase* (contoh: `organisasiSchema`, `produkSchema`).
 
-- Type exports
+-----
 
-```ts
-export type NamaObjectData = z.infer<typeof namaObjectSchema>;
-export type CreateNamaObjectData = z.infer<typeof createNamaObjectSchema>;
-export type UpdateNamaObjectData = z.infer<typeof updateNamaObjectSchema>;
-tså
+## 3\. Manajemen Skema (Prisma & Zod)
+
+`schema.prisma` adalah **satu-satunya sumber kebenaran (single source of truth)** untuk struktur data. Skema Zod harus selalu sinkron dengan model Prisma.
+
+  - **Skema Utama**: Merefleksikan model dari `schema.prisma`.
+
+    ```ts
+    // contoh: @/lib/schemas/organisasi.ts
+    import { z } from "zod";
+
+    export const organisasiSchema = z.object({
+      id: z.string().cuid(),
+      nama: z.string().min(3, "Nama organisasi minimal 3 karakter"),
+      alamat: z.string().optional(),
+      createdAt: z.date(),
+      updatedAt: z.date(),
+    });
+    ```
+
+  - **Skema untuk Membuat Data (`Create`)**: Turunan dari skema utama, dengan menghapus `id` dan *timestamps*.
+
+    ```ts
+    export const createOrganisasiSchema = organisasiSchema.omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true,
+    });
+    ```
+
+  - **Skema untuk Memperbarui Data (`Update`)**: Turunan dari skema utama, di mana semua field bersifat opsional (`partial`) namun `id` wajib ada.
+
+    ```ts
+    export const updateOrganisasiSchema = organisasiSchema.partial().extend({
+      id: z.string().cuid("ID organisasi tidak valid"),
+    });
+    ```
+
+  - **Ekspor Tipe (Type Exports)**: Ekspor tipe TypeScript dari setiap skema Zod untuk digunakan di seluruh aplikasi.
+
+    ```ts
+    export type OrganisasiData = z.infer<typeof organisasiSchema>;
+    export type CreateOrganisasiData = z.infer<typeof createOrganisasiSchema>;
+    export type UpdateOrganisasiData = z.infer<typeof updateOrganisasiSchema>;
+    ```
+
+-----
+
+## 4\. Pengembangan Antarmuka (UI/UX)
+
+  - **Modularitas**: Semua halaman **wajib** dibangun menggunakan **komponen modular** yang dapat digunakan kembali. Pecah setiap bagian halaman (seperti header, tabel, form) menjadi komponen tersendiri.
+  - **Server & Client Component**:
+      - Secara *default*, semua halaman adalah **Server Component** untuk performa optimal.
+      - Jika sebuah komponen memerlukan *state* atau interaktivitas (contoh: `onClick`, `useState`), bungkus komponen tersebut atau buat sebagai **Client Component** (`'use client'`).
+  - **Desain Responsif & Mobile-Friendly**:
+      - Antarmuka harus konsisten, intuitif, dan berfungsi dengan baik di berbagai ukuran layar, terutama **mobile**.
+      - Gunakan **Sidebar** sebagai navigasi menu utama.
+  - **Alur pada Mobile**: Untuk alur yang kompleks (misalnya form dengan beberapa langkah atau halaman detail), terapkan pola navigasi *sub-halaman* seperti pada aplikasi mobile. Saat pengguna masuk ke *sub-halaman*, sembunyikan menu utama dan elemen lain yang tidak relevan untuk fokus pada tugas yang sedang dikerjakan.
+
+-----
+
+## 5\. Manajemen State
+
+  - Untuk manajemen *state* global atau yang perlu dibagikan antar halaman (seperti data pengguna yang login atau isi keranjang belanja), gunakan **Zustand**.

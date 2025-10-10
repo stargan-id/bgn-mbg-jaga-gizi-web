@@ -145,3 +145,175 @@ export async function getSppgStats(): Promise<SppgStats> {
     }, {} as Record<StatusVerifikasi, number>)
   };
 }
+
+// CRUD Operations
+
+export interface SppgListParams {
+  search?: string;
+  statusVerifikasi?: StatusVerifikasi;
+  organisasiId?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface SppgListResult {
+  data: SppgWithOrganisasi[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export async function getSppgList(params: SppgListParams = {}): Promise<SppgListResult> {
+  const { search, statusVerifikasi, organisasiId, page = 1, limit = 10 } = params;
+  
+  const where: any = {};
+  
+  if (search) {
+    where.OR = [
+      { nama: { contains: search, mode: 'insensitive' } },
+      { alamat: { contains: search, mode: 'insensitive' } },
+      { kontak: { contains: search, mode: 'insensitive' } }
+    ];
+  }
+  
+  if (statusVerifikasi) {
+    where.statusVerifikasi = statusVerifikasi;
+  }
+  
+  if (organisasiId) {
+    where.organisasiId = organisasiId;
+  }
+
+  const [data, total] = await Promise.all([
+    db.sppg.findMany({
+      where,
+      include: {
+        organisasi: {
+          select: {
+            id: true,
+            nama: true,
+            singkatan: true
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    db.sppg.count({ where })
+  ]);
+
+  return {
+    data,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit)
+  };
+}
+
+export interface CreateSppgParams {
+  nama: string;
+  alamat: string;
+  kontak?: string;
+  kapasitasProduksi: number;
+  longitude?: number;
+  latitude?: number;
+  organisasiId: string;
+  createdBy: string;
+}
+
+export async function createSppg(params: CreateSppgParams): Promise<SppgWithOrganisasi> {
+  const sppg = await db.sppg.create({
+    data: {
+      ...params,
+      statusVerifikasi: 'DRAFT'
+    },
+    include: {
+      organisasi: {
+        select: {
+          id: true,
+          nama: true,
+          singkatan: true
+        }
+      }
+    }
+  });
+
+  return sppg;
+}
+
+export interface UpdateSppgParams {
+  id: string;
+  nama?: string;
+  alamat?: string;
+  kontak?: string;
+  kapasitasProduksi?: number;
+  longitude?: number;
+  latitude?: number;
+  organisasiId?: string;
+  updatedBy: string;
+}
+
+export async function updateSppg(params: UpdateSppgParams): Promise<SppgWithOrganisasi> {
+  const { id, updatedBy, ...updateData } = params;
+  
+  const sppg = await db.sppg.update({
+    where: { id },
+    data: {
+      ...updateData,
+      updatedBy,
+      updatedAt: new Date()
+    },
+    include: {
+      organisasi: {
+        select: {
+          id: true,
+          nama: true,
+          singkatan: true
+        }
+      }
+    }
+  });
+
+  return sppg;
+}
+
+export async function deleteSppg(id: string): Promise<void> {
+  await db.sppg.delete({
+    where: { id }
+  });
+}
+
+export interface VerifySppgParams {
+  id: string;
+  statusVerifikasi: 'APPROVED' | 'REJECTED' | 'SUSPENDED';
+  updatedBy: string;
+}
+
+export async function verifySppg(params: VerifySppgParams): Promise<SppgWithOrganisasi> {
+  const { id, statusVerifikasi, updatedBy } = params;
+  
+  const sppg = await db.sppg.update({
+    where: { id },
+    data: {
+      statusVerifikasi,
+      updatedBy,
+      updatedAt: new Date()
+    },
+    include: {
+      organisasi: {
+        select: {
+          id: true,
+          nama: true,
+          singkatan: true
+        }
+      }
+    }
+  });
+
+  return sppg;
+}
