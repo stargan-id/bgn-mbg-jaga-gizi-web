@@ -89,6 +89,9 @@ Konsistensi penamaan adalah kunci utama dalam proyek ini.
       - Antarmuka harus konsisten, intuitif, dan berfungsi dengan baik di berbagai ukuran layar, terutama **mobile**.
       - Gunakan **Sidebar** sebagai navigasi menu utama.
   - **Alur pada Mobile**: Untuk alur yang kompleks (misalnya form dengan beberapa langkah atau halaman detail), terapkan pola navigasi *sub-halaman* seperti pada aplikasi mobile. Saat pengguna masuk ke *sub-halaman*, sembunyikan menu utama dan elemen lain yang tidak relevan untuk fokus pada tugas yang sedang dikerjakan.
+    - **Formulir**: Untuk setiap pembuatan formulir, wajib menggunakan **React Hook Form** dengan **Zod resolver** untuk validasi dan pengelolaan state. Ini memastikan konsistensi, kemudahan validasi, dan integrasi dengan skema Zod.
+
+    - **tabel**: untuk setiap tabel, gunakan tanStack table, 
 
 -----
 

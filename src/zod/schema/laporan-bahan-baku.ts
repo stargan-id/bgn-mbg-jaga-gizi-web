@@ -3,7 +3,7 @@ import { z } from "zod";
 // Laporan Bahan Baku Schema
 export const laporanBahanBakuSchema = z.object({
   id: z.string().cuid(),
-  tanggal: z.date(),
+  tanggal: z.coerce.date(),
   namaBahan: z.string().min(1, "Nama bahan harus diisi"),
   jenisBahan: z.enum([
     "PROTEIN_HEWANI",
@@ -17,15 +17,15 @@ export const laporanBahanBakuSchema = z.object({
   ]),
   jumlah: z.number().min(0.1, "Jumlah harus lebih dari 0"),
   satuan: z.string().min(1, "Satuan harus diisi"),
-  tanggalExpiry: z.date().optional(),
+  tanggalExpiry: z.coerce.date().optional(),
   kondisiBahan: z.enum(["SANGAT_BAIK", "BAIK", "CUKUP", "BURUK"]),
   suhuPenerimaan: z.number().optional(),
-  fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
+  // fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
   catatan: z.string().optional(),
-  sppgId: z.string().cuid(),
-  pemasokId: z.string().cuid(),
+  sppgId: z.string(),
+  pemasokId: z.string(),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
   updatedAt: z.date().optional(),
 });
@@ -33,6 +33,9 @@ export const laporanBahanBakuSchema = z.object({
 // Schema for create (without id and timestamps)
 export const createLaporanBahanBakuSchema = laporanBahanBakuSchema.omit({
   id: true,
+  sppgId: true,
+  createdBy: true,
+  updatedBy: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -44,7 +47,7 @@ export const updateLaporanBahanBakuSchema = laporanBahanBakuSchema.partial().ext
 
 // Schema for bulk create (multiple ingredients at once)
 export const createBulkLaporanBahanBakuSchema = z.object({
-  tanggal: z.date(),
+  tanggal: z.coerce.date(),
   sppgId: z.string().cuid(),
   pemasokId: z.string().cuid(),
   bahanBaku: z.array(

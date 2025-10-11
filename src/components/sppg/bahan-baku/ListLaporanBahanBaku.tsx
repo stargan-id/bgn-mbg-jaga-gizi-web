@@ -1,0 +1,33 @@
+"use client";
+import { useEffect, useState } from "react";
+import { getLaporanBahanBakuListAction, deleteLaporanBahanBakuAction } from "@/actions/laporan-bahan-baku";
+import { LaporanBahanBakuData } from "@/types/laporan-bahan-baku";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { LaporanBahanBakuTable } from "./LaporanBahanBakuTable";
+
+export function ListLaporanBahanBaku() {
+  const [data, setData] = useState<LaporanBahanBakuData[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    getLaporanBahanBakuListAction().then((res) => {
+      setData(res.data || []);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Yakin ingin menghapus laporan ini?")) {
+      await deleteLaporanBahanBakuAction(id);
+      setData((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  return (
+    <div>
+      <LaporanBahanBakuTable data={data} loading={loading} onDelete={handleDelete} />
+    </div>
+  );
+}
