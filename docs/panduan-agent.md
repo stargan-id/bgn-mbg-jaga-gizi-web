@@ -29,6 +29,14 @@ Konsistensi penamaan adalah kunci utama dalam proyek ini.
       - Penamaan file dan komponen menggunakan **Bahasa Indonesia** dengan format *PascalCase* (contoh: `TombolSimpan.tsx`, `FormulirPengguna.tsx`).
   - **Skema Zod**:
       - Menggunakan format `namaObjectSchema` dalam *camelCase* (contoh: `organisasiSchema`, `produkSchema`).
+  - **routing**: 
+      - gunakan routing /[id] untuk detail
+      - gunakan routing /[id]/edit untuk edit
+      - gunakan routing / untuk tabular data
+      - gunakan routing /tambah untuk tambah data
+
+
+
 
 -----
 

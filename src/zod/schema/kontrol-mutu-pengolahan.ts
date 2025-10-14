@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // Kontrol Mutu Pengolahan Schema
 export const kontrolMutuPengolahanSchema = z.object({
-  id: z.string().cuid(),
-  waktuKontrol: z.date(),
+  id: z.string(),
+  waktuKontrol: z.coerce.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -12,7 +12,7 @@ export const kontrolMutuPengolahanSchema = z.object({
     "PENYAJIAN",
     "PEMBERSIHAN"
   ]),
-  suhu: z.number().min(-50).max(200).optional(), // Suhu dalam Celsius
+  suhu: z.coerce.number().min(-50).max(200).optional(), // Suhu dalam Celsius
   tekstur: z.string().optional(),
   warna: z.string().optional(),
   aroma: z.string().optional(),
@@ -23,8 +23,8 @@ export const kontrolMutuPengolahanSchema = z.object({
   tindakanKoreksi: z.string().optional(),
   fotoEvidence: z.array(z.string()),
   petugasKontrol: z.string().min(1, "Petugas kontrol harus diisi"),
-  kegiatanPengolahanId: z.string().cuid(),
-  createdAt: z.date(),
+  kegiatanPengolahanId: z.string(),
+  createdAt: z.coerce.date(),
 });
 
 // Schema for create (without id and timestamps)
@@ -35,12 +35,12 @@ export const createKontrolMutuPengolahanSchema = kontrolMutuPengolahanSchema.omi
 
 // Schema for update (id required, other fields optional)
 export const updateKontrolMutuPengolahanSchema = kontrolMutuPengolahanSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for quick quality check (simplified)
 export const quickQualityCheckSchema = z.object({
-  kegiatanPengolahanId: z.string().cuid(),
+  kegiatanPengolahanId: z.string(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -58,7 +58,7 @@ export const quickQualityCheckSchema = z.object({
 
 // Schema for detailed quality assessment
 export const detailedQualityAssessmentSchema = z.object({
-  kegiatanPengolahanId: z.string().cuid(),
+  kegiatanPengolahanId: z.string(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -67,7 +67,7 @@ export const detailedQualityAssessmentSchema = z.object({
     "PENYAJIAN",
     "PEMBERSIHAN"
   ]),
-  suhu: z.number().min(-50).max(200).optional(),
+  suhu: z.coerce.number().min(-50).max(200).optional(),
   sensorikCheck: z.object({
     tekstur: z.string().min(1, "Penilaian tekstur harus diisi"),
     warna: z.string().min(1, "Penilaian warna harus diisi"),
@@ -87,7 +87,7 @@ export const detailedQualityAssessmentSchema = z.object({
 
 // Schema for corrective action
 export const correctiveActionSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   tindakanKoreksi: z.string().min(1, "Tindakan koreksi harus diisi"),
   statusMutu: z.enum(["SANGAT_BAIK", "BAIK", "CUKUP", "PERLU_PERBAIKAN", "DITOLAK"]),
   fotoEvidence: z.array(z.string()).optional(),
@@ -95,10 +95,10 @@ export const correctiveActionSchema = z.object({
 
 // Schema for quality control report
 export const qualityControlReportSchema = z.object({
-  kegiatanPengolahanId: z.string().cuid().optional(),
-  sppgId: z.string().cuid().optional(),
-  tanggalMulai: z.date(),
-  tanggalSelesai: z.date(),
+  kegiatanPengolahanId: z.string().optional(),
+  sppgId: z.string().optional(),
+  tanggalMulai: z.coerce.date(),
+  tanggalSelesai: z.coerce.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -114,10 +114,10 @@ export const qualityControlReportSchema = z.object({
 
 // Schema for quality trend analysis
 export const qualityTrendAnalysisSchema = z.object({
-  sppgId: z.string().cuid(),
+  sppgId: z.string(),
   periode: z.enum(["HARIAN", "MINGGUAN", "BULANAN"]),
-  tanggalMulai: z.date(),
-  tanggalSelesai: z.date(),
+  tanggalMulai: z.coerce.date(),
+  tanggalSelesai: z.coerce.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 

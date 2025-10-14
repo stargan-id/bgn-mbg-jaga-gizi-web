@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Dokumen SPPG Schema
 export const dokumenSppgSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   jenisDokumen: z.enum([
     "SLHS", 
     "SERTIFIKAT_HALAL", 
@@ -14,16 +14,16 @@ export const dokumenSppgSchema = z.object({
   ]),
   namaDokumen: z.string().min(1, "Nama dokumen harus diisi"),
   nomorDokumen: z.string().optional(),
-  tanggalTerbit: z.date(),
-  tanggalExpiry: z.date().optional(),
+  tanggalTerbit: z.coerce.date(),
+  tanggalExpiry: z.coerce.date().optional(),
   filePath: z.string().min(1, "File harus diunggah"),
   statusDokumen: z.enum(["PENDING", "APPROVED", "REJECTED", "EXPIRED"]),
   catatanReview: z.string().optional(),
-  sppgId: z.string().cuid(),
+  sppgId: z.string(),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -37,12 +37,12 @@ export const createDokumenSppgSchema = dokumenSppgSchema.omit({
 
 // Schema for update (id required, other fields optional)
 export const updateDokumenSppgSchema = dokumenSppgSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for document review (admin only)
 export const reviewDokumenSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   statusDokumen: z.enum(["APPROVED", "REJECTED"]),
   catatanReview: z.string().min(1, "Catatan review harus diisi"),
 });

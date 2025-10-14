@@ -14,16 +14,16 @@ export const peringatanSchema = z.object({
   dataKonteks: z.any().optional(), // JSON data
   sppgId: z.string().optional(),
   organisasiId: z.string().optional(),
-  batasWaktuTindakan: z.date().optional(),
+  batasWaktuTindakan: z.coerce.date().optional(),
   tindakanDilakukan: z.string().optional(),
   hasilTindakan: z.string().optional(),
   autoResolve: z.boolean().default(false),
-  resolvedAt: z.date().optional(),
+  resolvedAt: z.coerce.date().optional(),
   resolvedBy: z.string().optional(),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema untuk create peringatan
@@ -46,16 +46,16 @@ export const updatePeringatanSchema = peringatanSchema.partial().extend({
 
 // Schema untuk filter peringatan
 export const filterPeringatanSchema = z.object({
-  page: z.number().min(1).default(1),
-  limit: z.number().min(1).max(100).default(20),
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(20),
   jenisPeringatan: z.nativeEnum(JenisPeringatan).optional(),
   tingkatPrioritas: z.nativeEnum(TingkatPrioritas).optional(),
   statusPeringatan: z.nativeEnum(StatusPeringatan).optional(),
   sppgId: z.string().optional(),
   organisasiId: z.string().optional(),
   search: z.string().optional(),
-  dateFrom: z.date().optional(),
-  dateTo: z.date().optional(),
+  dateFrom: z.coerce.date().optional(),
+  dateTo: z.coerce.date().optional(),
   showResolved: z.boolean().default(false), // Default hanya tampilkan yang belum resolved
 });
 
@@ -65,12 +65,12 @@ export const notifikasiPeringatanSchema = z.object({
   peringatanId: z.string(),
   userId: z.string(),
   dibaca: z.boolean().default(false),
-  dibacaAt: z.date().optional(),
+  dibacaAt: z.coerce.date().optional(),
   dismiss: z.boolean().default(false),
-  dismissAt: z.date().optional(),
+  dismissAt: z.coerce.date().optional(),
   channelEmail: z.boolean().default(true),
   channelInApp: z.boolean().default(true),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
 });
 
 // Schema untuk mark notifikasi sebagai dibaca
@@ -91,11 +91,11 @@ export const aturanPeringatanSchema = z.object({
   templateDeskripsi: z.string().min(1, "Template deskripsi harus diisi"),
   statusAktif: z.boolean().default(true),
   autoResolve: z.boolean().default(false),
-  batasWaktuDefault: z.number().min(1).optional(), // dalam jam
+  batasWaktuDefault: z.coerce.number().min(1).optional(), // dalam jam
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Type exports

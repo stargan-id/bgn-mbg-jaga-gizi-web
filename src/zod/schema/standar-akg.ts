@@ -2,19 +2,19 @@ import { z } from "zod";
 
 // Standar AKG Schema
 export const standarAkgSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   kelompokUsia: z.string().min(1, "Kelompok usia harus diisi"),
-  minKalori: z.number().min(1, "Minimum kalori harus lebih dari 0"),
-  maxKalori: z.number().min(1).optional(),
-  minProtein: z.number().min(0, "Minimum protein tidak boleh negatif"),
-  minKarbohidrat: z.number().min(0, "Minimum karbohidrat tidak boleh negatif"),
-  minLemak: z.number().min(0, "Minimum lemak tidak boleh negatif"),
+  minKalori: z.coerce.number().min(1, "Minimum kalori harus lebih dari 0"),
+  maxKalori: z.coerce.number().min(1).optional(),
+  minProtein: z.coerce.number().min(0, "Minimum protein tidak boleh negatif"),
+  minKarbohidrat: z.coerce.number().min(0, "Minimum karbohidrat tidak boleh negatif"),
+  minLemak: z.coerce.number().min(0, "Minimum lemak tidak boleh negatif"),
   deskripsi: z.string().optional(),
   statusAktif: z.enum(["AKTIF", "NON_AKTIF", "DIBUBARKAN"]),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -27,7 +27,7 @@ export const createStandarAkgSchema = standarAkgSchema.omit({
 
 // Schema for update (id required, other fields optional)
 export const updateStandarAkgSchema = standarAkgSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for AKG validation

@@ -1,0 +1,32 @@
+{
+  "header": [
+    "nomor",
+    "kode_baru",
+    "nama_bahan_makanan",
+    "Air",
+    "Energi",
+    "Protein",
+    "Lemak",
+    "Karbohidrat",
+    "Serat",
+    "Abu",
+    "Kalsium (Ca)",
+    "Fosfor (P)",
+    "Besi (Fe)",
+    "Natrium (Na)",
+    "Kalium (Ka)",
+    "Tembaga (Cu)",
+    "Seng (Zn)",
+    "Retinol (vit. A)",
+    "β-karoten",
+    "Karoten total",
+    "Thiamin (vit. B1)",
+    "Riboflavin (vit. B2)",
+    "Niasin",
+    "Vitamin C",
+    "BDD",
+    "mentah_olahan",
+    "kelompok_makanan",
+    "sumber"
+  ]
+}

@@ -25,9 +25,9 @@ export const startKegiatanPengolahanSchema = z.object({
 
 // Schema untuk menyelesaikan kegiatan pengolahan dengan kontrol mutu akhir
 export const completeKegiatanWithQualityControlSchema = z.object({
-  id: z.string().cuid(),
-  jamSelesai: z.date(),
-  porsiTerealisasi: z.number().min(0, "Porsi terealisasi tidak boleh negatif"),
+  id: z.string(),
+  jamSelesai: z.coerce.date(),
+  porsiTerealisasi: z.coerce.number().min(0, "Porsi terealisasi tidak boleh negatif"),
   statusKegiatan: z.enum(["SELESAI", "DIHENTIKAN", "GAGAL"]),
   catatanProses: z.string().optional(),
   catatanMutu: z.string().optional(),
@@ -44,16 +44,16 @@ export const updateKegiatanWithBahanBakuSchema = z.object({
   bahanBakuBaru: z.array(createPenggunaanBahanBakuSchema.omit({ kegiatanPengolahanId: true }))
     .optional(),
   bahanBakuUpdate: z.array(z.object({
-    id: z.string().cuid(),
+    id: z.string(),
     data: createPenggunaanBahanBakuSchema.partial(),
   })).optional(),
-  bahanBakuHapus: z.array(z.string().cuid()).optional(),
+  bahanBakuHapus: z.array(z.string()).optional(),
 });
 
 // Schema untuk laporan kegiatan pengolahan harian
 export const laporanKegiatanHarianSchema = z.object({
-  sppgId: z.string().cuid(),
-  tanggal: z.date(),
+  sppgId: z.string(),
+  tanggal: z.coerce.date(),
   includeDetails: z.boolean().default(true),
   includeBahanBaku: z.boolean().default(true),
   includeKontrolMutu: z.boolean().default(true),
@@ -62,9 +62,9 @@ export const laporanKegiatanHarianSchema = z.object({
 
 // Schema untuk dashboard pengolahan
 export const dashboardPengolahanSchema = z.object({
-  sppgId: z.string().cuid().optional(),
-  tanggalMulai: z.date().optional(),
-  tanggalSelesai: z.date().optional(),
+  sppgId: z.string().optional(),
+  tanggalMulai: z.coerce.date().optional(),
+  tanggalSelesai: z.coerce.date().optional(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]).optional(),
   statusKegiatan: z.enum(["PERSIAPAN", "BERLANGSUNG", "SELESAI", "DIHENTIKAN", "GAGAL"]).optional(),
   includeMetrics: z.boolean().default(true),
@@ -73,10 +73,10 @@ export const dashboardPengolahanSchema = z.object({
 
 // Schema untuk analisis efisiensi pengolahan
 export const analisisEfisiensiSchema = z.object({
-  sppgId: z.string().cuid(),
+  sppgId: z.string(),
   periode: z.enum(["HARIAN", "MINGGUAN", "BULANAN"]),
-  tanggalMulai: z.date(),
-  tanggalSelesai: z.date(),
+  tanggalMulai: z.coerce.date(),
+  tanggalSelesai: z.coerce.date(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]).optional(),
   metrik: z.array(z.enum([
     "WAKTU_PENGOLAHAN",
@@ -89,7 +89,7 @@ export const analisisEfisiensiSchema = z.object({
 
 // Schema untuk notifikasi pengolahan
 export const notifikasiPengolahanSchema = z.object({
-  sppgId: z.string().cuid(),
+  sppgId: z.string(),
   jenis: z.enum([
     "KEGIATAN_DIMULAI",
     "KEGIATAN_SELESAI", 
@@ -105,7 +105,7 @@ export const notifikasiPengolahanSchema = z.object({
 
 // Schema untuk validasi HACCP compliance
 export const haccpComplianceSchema = z.object({
-  kegiatanPengolahanId: z.string().cuid(),
+  kegiatanPengolahanId: z.string(),
   checkPoints: z.array(z.object({
     controlPoint: z.string(),
     criticalLimit: z.string(),
@@ -115,7 +115,7 @@ export const haccpComplianceSchema = z.object({
   })),
   overallCompliance: z.boolean(),
   verifiedBy: z.string().min(1, "Verifikator harus diisi"),
-  verificationDate: z.date(),
+  verificationDate: z.coerce.date(),
 });
 
 // Type exports

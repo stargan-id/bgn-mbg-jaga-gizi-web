@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // Checklist Harian Schema
 export const checklistHarianSchema = z.object({
-  id: z.string().cuid(),
-  tanggal: z.date(),
+  id: z.string(),
+  tanggal: z.coerce.date(),
   kebersihanSdm: z.boolean({
     message: "Status kebersihan SDM harus diisi",
   }),
@@ -13,16 +13,16 @@ export const checklistHarianSchema = z.object({
   kondisiPeralatan: z.boolean({
     message: "Status kondisi peralatan harus diisi",
   }),
-  suhuPenyimpanan: z.number().optional(),
+  suhuPenyimpanan: z.coerce.number().optional(),
   catatan: z.string().optional(),
   fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
-  skorKepatuhan: z.number().min(0).max(100).optional(),
+  skorKepatuhan: z.coerce.number().min(0).max(100).optional(),
   status: z.enum(["DRAFT", "SUBMITTED", "REVIEWED"]),
-  sppgId: z.string().cuid(),
+  sppgId: z.string(),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -36,18 +36,18 @@ export const createChecklistHarianSchema = checklistHarianSchema.omit({
 
 // Schema for update (id required, other fields optional)
 export const updateChecklistHarianSchema = checklistHarianSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for submission (sets status to SUBMITTED)
 export const submitChecklistSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for review (admin only)
 export const reviewChecklistSchema = z.object({
-  id: z.string().cuid(),
-  skorKepatuhan: z.number().min(0).max(100),
+  id: z.string(),
+  skorKepatuhan: z.coerce.number().min(0).max(100),
   catatan: z.string().optional(),
 });
 

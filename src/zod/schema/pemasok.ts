@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Pemasok Schema
 export const pemasokSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   nama: z.string().min(1, "Nama pemasok harus diisi"),
   alamat: z.string().min(1, "Alamat harus diisi"),
   kontak: z.string().optional(),
@@ -17,9 +17,9 @@ export const pemasokSchema = z.object({
   statusAktif: z.enum(["AKTIF", "NON_AKTIF", "DIBUBARKAN"]),
   sertifikat: z.array(z.string()),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -32,7 +32,7 @@ export const createPemasokSchema = pemasokSchema.omit({
 
 // Schema for update (id required, other fields optional)
 export const updatePemasokSchema = pemasokSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Type exports

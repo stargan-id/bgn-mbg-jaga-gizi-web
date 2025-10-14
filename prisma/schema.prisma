@@ -78,22 +78,22 @@ model UserRole {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  name           String
-  email          String          @unique
-  password       String?
-  emailVerified  DateTime?       @map("email_verified")
-  image          String?
-  status         StatusUser      @default(AKTIF) @map("status_aktif")
-  sessions       Session[]
-  organisasiId   String?         @map("organisasi_id")
-  organisasi     Organisasi?     @relation(fields: [organisasiId], references: [id])
-  createdBy      String          @default("init") @map("created_by")
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedBy      String?         @map("updated_by")
-  updatedAt      DateTime?       @updatedAt @map("updated_at")
-  userRole       UserRole[]
-  userPreference UserPreference? // 1-to-1 relation with UserPreference
+  id                   String                 @id @default(cuid())
+  name                 String
+  email                String                 @unique
+  password             String?
+  emailVerified        DateTime?              @map("email_verified")
+  image                String?
+  status               StatusUser             @default(AKTIF) @map("status_aktif")
+  sessions             Session[]
+  organisasiId         String?                @map("organisasi_id")
+  organisasi           Organisasi?            @relation(fields: [organisasiId], references: [id])
+  createdBy            String                 @default("init") @map("created_by")
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedBy            String?                @map("updated_by")
+  updatedAt            DateTime?              @updatedAt @map("updated_at")
+  userRole             UserRole[]
+  userPreference       UserPreference? // 1-to-1 relation with UserPreference
   notifikasiPeringatan NotifikasiPeringatan[]
 
   @@map("users")
@@ -171,29 +171,29 @@ model Organisasi {
 
 // SPPG (Satuan Pelayanan Pemenuhan Gizi) - Core entity
 model Sppg {
-  id               String         @id @default(cuid())
-  nama             String
-  alamat           String
-  kontak           String?
-  kapasitasProduksi Int           @map("kapasitas_produksi")
-  statusVerifikasi StatusVerifikasi @default(DRAFT) @map("status_verifikasi")
-  longitude        Float?
-  latitude         Float?
-  organisasiId     String         @map("organisasi_id")
-  organisasi       Organisasi     @relation(fields: [organisasiId], references: [id])
-  createdBy        String         @map("created_by")
-  createdAt        DateTime       @default(now()) @map("created_at")
-  updatedBy        String?        @map("updated_by")
-  updatedAt        DateTime?      @updatedAt @map("updated_at")
-  
+  id                String           @id @default(cuid())
+  nama              String
+  alamat            String
+  kontak            String?
+  kapasitasProduksi Int              @map("kapasitas_produksi")
+  statusVerifikasi  StatusVerifikasi @default(DRAFT) @map("status_verifikasi")
+  longitude         Float?
+  latitude          Float?
+  organisasiId      String           @map("organisasi_id")
+  organisasi        Organisasi       @relation(fields: [organisasiId], references: [id])
+  createdBy         String           @map("created_by")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedBy         String?          @map("updated_by")
+  updatedAt         DateTime?        @updatedAt @map("updated_at")
+
   // Relations
-  dokumenSppg      DokumenSppg[]
-  checklistHarian   ChecklistHarian[]
-  laporanBahanBaku  LaporanBahanBaku[]
-  menuHarian        MenuHarian[]
+  dokumenSppg        DokumenSppg[]
+  checklistHarian    ChecklistHarian[]
+  laporanBahanBaku   LaporanBahanBaku[]
+  menuHarian         MenuHarian[]
   kegiatanPengolahan KegiatanPengolahan[]
-  peringatan        Peringatan[]
-  
+  peringatan         Peringatan[]
+
   @@map("sppg")
 }
 
@@ -214,248 +214,303 @@ model DokumenSppg {
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedBy     String?       @map("updated_by")
   updatedAt     DateTime?     @updatedAt @map("updated_at")
-  
+
   @@map("dokumen_sppg")
 }
 
 // Checklist harian operasional
 model ChecklistHarian {
-  id                   String               @id @default(cuid())
-  tanggal              DateTime
-  kebersihanSdm        Boolean              @map("kebersihan_sdm")
-  kebersihanInfrastruktur Boolean          @map("kebersihan_infrastruktur")
-  kondisiPeralatan     Boolean              @map("kondisi_peralatan")
-  suhuPenyimpanan      Float?               @map("suhu_penyimpanan")
-  catatan              String?
-  fotoEvidence         String[]             @map("foto_evidence")
-  skorKepatuhan        Int?                 @map("skor_kepatuhan")
-  status               StatusChecklist      @default(DRAFT)
-  sppgId               String              @map("sppg_id")
-  sppg                 Sppg                @relation(fields: [sppgId], references: [id], onDelete: Cascade)
-  createdBy            String              @map("created_by")
-  createdAt            DateTime            @default(now()) @map("created_at")
-  updatedBy            String?             @map("updated_by")
-  updatedAt            DateTime?           @updatedAt @map("updated_at")
-  
+  id                      String          @id @default(cuid())
+  tanggal                 DateTime
+  kebersihanSdm           Boolean         @map("kebersihan_sdm")
+  kebersihanInfrastruktur Boolean         @map("kebersihan_infrastruktur")
+  kondisiPeralatan        Boolean         @map("kondisi_peralatan")
+  suhuPenyimpanan         Float?          @map("suhu_penyimpanan")
+  catatan                 String?
+  fotoEvidence            String[]        @map("foto_evidence")
+  skorKepatuhan           Int?            @map("skor_kepatuhan")
+  status                  StatusChecklist @default(DRAFT)
+  sppgId                  String          @map("sppg_id")
+  sppg                    Sppg            @relation(fields: [sppgId], references: [id], onDelete: Cascade)
+  createdBy               String          @map("created_by")
+  createdAt               DateTime        @default(now()) @map("created_at")
+  updatedBy               String?         @map("updated_by")
+  updatedAt               DateTime?       @updatedAt @map("updated_at")
+
   @@unique([sppgId, tanggal])
   @@map("checklist_harian")
 }
 
 // Pemasok bahan baku
 model Pemasok {
-  id               String             @id @default(cuid())
-  nama             String
-  alamat           String
-  kontak           String?
-  jenisPemasok     JenisPemasok       @map("jenis_pemasok")
-  statusAktif      StatusAktif        @default(AKTIF) @map("status_aktif")
-  sertifikat       String[]
-  createdBy        String             @map("created_by")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedBy        String?            @map("updated_by")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
-  
+  id           String       @id @default(cuid())
+  nama         String
+  alamat       String
+  kontak       String?
+  jenisPemasok JenisPemasok @map("jenis_pemasok")
+  statusAktif  StatusAktif  @default(AKTIF) @map("status_aktif")
+  sertifikat   String[]
+  createdBy    String       @map("created_by")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedBy    String?      @map("updated_by")
+  updatedAt    DateTime?    @updatedAt @map("updated_at")
+
   // Relations
   laporanBahanBaku LaporanBahanBaku[]
-  
+
   @@map("pemasok")
 }
 
 // Laporan penerimaan bahan baku
 model LaporanBahanBaku {
-  id              String           @id @default(cuid())
-  tanggal         DateTime
-  namaBahan       String           @map("nama_bahan")
-  jenisBahan      JenisBahan       @map("jenis_bahan")
-  jumlah          Float
-  satuan          String
-  tanggalExpiry   DateTime?        @map("tanggal_expiry")
-  kondisiBahan    KondisiBahan     @map("kondisi_bahan")
-  suhuPenerimaan  Float?           @map("suhu_penerimaan")
-  fotoEvidence    String[]         @map("foto_evidence")
-  catatan         String?
-  sppgId          String           @map("sppg_id")
-  sppg            Sppg             @relation(fields: [sppgId], references: [id], onDelete: Cascade)
-  pemasokId       String           @map("pemasok_id")
-  pemasok         Pemasok          @relation(fields: [pemasokId], references: [id])
-  createdBy         String                @map("created_by")
-  createdAt         DateTime              @default(now()) @map("created_at")
-  updatedBy         String?               @map("updated_by")
-  updatedAt         DateTime?             @updatedAt @map("updated_at")
-  
+  id             String       @id @default(cuid())
+  tanggal        DateTime
+  namaBahan      String       @map("nama_bahan")
+  jenisBahan     JenisBahan   @map("jenis_bahan")
+  jumlah         Float
+  satuan         String
+  tanggalExpiry  DateTime?    @map("tanggal_expiry")
+  kondisiBahan   KondisiBahan @map("kondisi_bahan")
+  suhuPenerimaan Float?       @map("suhu_penerimaan")
+  fotoEvidence   String[]     @map("foto_evidence")
+  catatan        String?
+  sppgId         String       @map("sppg_id")
+  sppg           Sppg         @relation(fields: [sppgId], references: [id], onDelete: Cascade)
+  pemasokId      String       @map("pemasok_id")
+  pemasok        Pemasok      @relation(fields: [pemasokId], references: [id])
+  createdBy      String       @map("created_by")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedBy      String?      @map("updated_by")
+  updatedAt      DateTime?    @updatedAt @map("updated_at")
+
   // Relations
   penggunaanBahanBaku PenggunaanBahanBaku[]
-  
+
   @@map("laporan_bahan_baku")
 }
 
 // Menu harian dan analisis gizi
+// nilai gizi disini adalah nilai gizi yang di klaim oleh dapur sppg
 model MenuHarian {
-  id               String            @id @default(cuid())
-  tanggal          DateTime
-  namaMenu         String            @map("nama_menu")
-  deskripsi        String?
-  porsiTarget      Int               @map("porsi_target")
-  kaloriPerPorsi   Float?            @map("kalori_per_porsi")
-  proteinPerPorsi  Float?            @map("protein_per_porsi")
-  karbohidratPerPorsi Float?         @map("karbohidrat_per_porsi")
-  lemakPerPorsi    Float?            @map("lemak_per_porsi")
-  statusAkg        StatusAkg         @default(BELUM_DIEVALUASI) @map("status_akg")
-  catatanGizi      String?           @map("catatan_gizi")
-  biayaPerPorsi    Float?            @map("biaya_per_porsi")
-  fotoMenu         String[]          @map("foto_menu")
-  sppgId           String            @map("sppg_id")
-  sppg             Sppg              @relation(fields: [sppgId], references: [id], onDelete: Cascade)
-  createdBy        String            @map("created_by")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedBy        String?           @map("updated_by")
-  updatedAt        DateTime?         @updatedAt @map("updated_at")
-  
+  id                  String    @id @default(cuid())
+  tanggal             DateTime
+  namaMenu            String    @map("nama_menu")
+  deskripsi           String?
+  porsiTarget         Int       @map("porsi_target")
+  kaloriPerPorsi      Float?    @map("kalori_per_porsi")
+  proteinPerPorsi     Float?    @map("protein_per_porsi")
+  karbohidratPerPorsi Float?    @map("karbohidrat_per_porsi")
+  lemakPerPorsi       Float?    @map("lemak_per_porsi")
+  statusAkg           StatusAkg @default(BELUM_DIEVALUASI) @map("status_akg")
+  catatanGizi         String?   @map("catatan_gizi")
+  biayaPerPorsi       Float?    @map("biaya_per_porsi")
+  fotoMenu            String[]  @map("foto_menu")
+  sppgId              String    @map("sppg_id")
+  sppg                Sppg      @relation(fields: [sppgId], references: [id], onDelete: Cascade)
+  createdBy           String    @map("created_by")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedBy           String?   @map("updated_by")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
+
   // Relations
   komponenMenu       KomponenMenu[]
   kegiatanPengolahan KegiatanPengolahan[]
-  
+
   @@unique([sppgId, tanggal])
   @@map("menu_harian")
 }
 
 // Komponen/ingredient dalam menu
 model KomponenMenu {
-  id            String     @id @default(cuid())
-  namaBahan     String     @map("nama_bahan")
-  jumlah        Float
-  satuan        String
-  kaloriPer100g Float?     @map("kalori_per_100g")
-  proteinPer100g Float?    @map("protein_per_100g")
-  karbohidratPer100g Float? @map("karbohidrat_per_100g")
-  lemakPer100g  Float?     @map("lemak_per_100g")
-  menuHarianId  String     @map("menu_harian_id")
-  menuHarian    MenuHarian @relation(fields: [menuHarianId], references: [id], onDelete: Cascade)
-  createdAt     DateTime   @default(now()) @map("created_at")
-  
+  id           String     @id @default(cuid())
+  bahanId      String     @map("bahan_id")
+  bahan        Tkpi       @relation(fields: [bahanId], references: [id], onDelete: Cascade)
+  keterangan   String     @map("keterangan")
+  jumlah       Float
+  satuan       String // lebih tepatnya satuannya gram atau kg saja, krn pada nilai gizi juga dihitung per 100g
+  menuHarianId String     @map("menu_harian_id")
+  menuHarian   MenuHarian @relation(fields: [menuHarianId], references: [id], onDelete: Cascade)
+  createdBy    String     @map("created_by")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedBy    String?    @map("updated_by")
+  updatedAt    DateTime?  @updatedAt @map("updated_at")
+
   @@map("komponen_menu")
+}
+
+// Model utama untuk bahan makanan
+model Tkpi {
+  id               String @id @default(cuid())
+  kodeBaru         String @unique @map("kode_baru")
+  namaBahanMakanan String @map("nama_bahan_makanan")
+
+  // Informasi tambahan
+  bdd             Float? // Bagian Dapat Dimakan (edible portion) dalam %
+  mentahOlahan    String? @map("mentah_olahan")
+  kelompokMakanan String? @map("kelompok_makanan")
+  sumber          String?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  // Relasi ke nilai gizinya
+  // Satu bahan makanan (Tkpi) memiliki BANYAK nilai gizi
+  nilaiGizi    NilaiGizi[]
+  KomponenMenu KomponenMenu[]
+
+  @@map("tkpi")
+}
+
+// Model "kamus" untuk semua jenis komponen gizi
+model KomponenGizi {
+  id     Int    @id @default(autoincrement())
+  nama   String @unique // "Energi", "Protein", "Kalsium", dll.
+  satuan String // "kcal", "g", "mg", dll.
+
+  // Relasi terbalik
+  // Satu komponen gizi bisa ada di BANYAK bahan makanan
+  nilaiGizi NilaiGizi[]
+
+  @@map("komponen_gizi")
+}
+
+// Model PENGHUBUNG antara Tkpi dan KomponenGizi
+model NilaiGizi {
+  id    String @id @default(cuid())
+  nilai Float // Nilai numeriknya, misal: 180, 3.0, 25
+
+  // Kunci asing (foreign key) untuk relasi
+  tkpiId String @map("tkpi_id")
+  tkpi   Tkpi   @relation(fields: [tkpiId], references: [id], onDelete: Cascade)
+
+  komponenGiziId Int          @map("komponen_gizi_id")
+  komponenGizi   KomponenGizi @relation(fields: [komponenGiziId], references: [id], onDelete: Cascade)
+
+  // Memastikan satu bahan makanan tidak punya dua entri untuk gizi yang sama
+  @@unique([tkpiId, komponenGiziId])
+  @@map("nilai_gizi")
 }
 
 // Master data standar AKG
 model StandarAkg {
-  id                String   @id @default(cuid())
-  kelompokUsia      String   @map("kelompok_usia")
-  minKalori         Float    @map("min_kalori")
-  maxKalori         Float?   @map("max_kalori")
-  minProtein        Float    @map("min_protein")
-  minKarbohidrat    Float    @map("min_karbohidrat")
-  minLemak          Float    @map("min_lemak")
-  deskripsi         String?
-  statusAktif       StatusAktif @default(AKTIF) @map("status_aktif")
-  createdBy         String   @map("created_by")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedBy         String?  @map("updated_by")
-  updatedAt         DateTime? @updatedAt @map("updated_at")
-  
+  id             String      @id @default(cuid())
+  kelompokUsia   String      @map("kelompok_usia")
+  minKalori      Float       @map("min_kalori")
+  maxKalori      Float?      @map("max_kalori")
+  minProtein     Float       @map("min_protein")
+  minKarbohidrat Float       @map("min_karbohidrat")
+  minLemak       Float       @map("min_lemak")
+  deskripsi      String?
+  statusAktif    StatusAktif @default(AKTIF) @map("status_aktif")
+  createdBy      String      @map("created_by")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedBy      String?     @map("updated_by")
+  updatedAt      DateTime?   @updatedAt @map("updated_at")
+
   @@map("standar_akg")
 }
 
 // Kegiatan Pengolahan Makanan - Core processing activity model
 model KegiatanPengolahan {
-  id                    String                 @id @default(cuid())
-  tanggalPengolahan     DateTime               @map("tanggal_pengolahan")
-  jamMulai              DateTime               @map("jam_mulai")
-  jamSelesai            DateTime?              @map("jam_selesai")
-  jenisPengolahan       JenisPengolahan        @map("jenis_pengolahan")
-  targetPorsi           Int                    @map("target_porsi")
-  porsiTerealisasi      Int?                   @map("porsi_terealisasi")
-  suhuPengolahan        Float?                 @map("suhu_pengolahan")
-  metodePengolahan      String                 @map("metode_pengolahan") // Direbus, Dikukus, Digoreng, dll
-  penanggungJawab       String                 @map("penanggung_jawab") // Nama cook/chef
-  statusKegiatan        StatusKegiatan         @default(BERLANGSUNG) @map("status_kegiatan")
-  catatanProses         String?                @map("catatan_proses")
-  catatanMutu           String?                @map("catatan_mutu")
-  fotoProses            String[]               @map("foto_proses")
-  
+  id                String          @id @default(cuid())
+  tanggalPengolahan DateTime        @map("tanggal_pengolahan")
+  jamMulai          DateTime        @map("jam_mulai")
+  jamSelesai        DateTime?       @map("jam_selesai")
+  jenisPengolahan   JenisPengolahan @map("jenis_pengolahan")
+  targetPorsi       Int             @map("target_porsi")
+  porsiTerealisasi  Int?            @map("porsi_terealisasi")
+  suhuPengolahan    Float?          @map("suhu_pengolahan")
+  metodePengolahan  String          @map("metode_pengolahan") // Direbus, Dikukus, Digoreng, dll
+  penanggungJawab   String          @map("penanggung_jawab") // Nama cook/chef
+  statusKegiatan    StatusKegiatan  @default(BERLANGSUNG) @map("status_kegiatan")
+  catatanProses     String?         @map("catatan_proses")
+  catatanMutu       String?         @map("catatan_mutu")
+  fotoProses        String[]        @map("foto_proses")
+
   // Relations
-  sppgId                String                 @map("sppg_id")
-  sppg                  Sppg                   @relation(fields: [sppgId], references: [id], onDelete: Cascade)
-  menuHarianId          String?                @map("menu_harian_id")
-  menuHarian            MenuHarian?            @relation(fields: [menuHarianId], references: [id])
-  
+  sppgId       String      @map("sppg_id")
+  sppg         Sppg        @relation(fields: [sppgId], references: [id], onDelete: Cascade)
+  menuHarianId String?     @map("menu_harian_id")
+  menuHarian   MenuHarian? @relation(fields: [menuHarianId], references: [id])
+
   // Audit fields
-  createdBy             String                 @map("created_by")
-  createdAt             DateTime               @default(now()) @map("created_at")
-  updatedBy             String?                @map("updated_by")
-  updatedAt             DateTime?              @updatedAt @map("updated_at")
-  
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   // Child relations
-  penggunaanBahanBaku   PenggunaanBahanBaku[]
-  kontrolMutu           KontrolMutuPengolahan[]
-  
+  penggunaanBahanBaku PenggunaanBahanBaku[]
+  kontrolMutu         KontrolMutuPengolahan[]
+
   @@map("kegiatan_pengolahan")
 }
 
 // Detail penggunaan bahan baku dalam kegiatan pengolahan
 model PenggunaanBahanBaku {
-  id                     String              @id @default(cuid())
-  namaBahan              String              @map("nama_bahan")
-  jenisBahan             JenisBahan          @map("jenis_bahan")
-  jumlahDigunakan        Float               @map("jumlah_digunakan")
-  satuan                 String
-  batchNumber            String?             @map("batch_number") // Untuk traceability
-  tanggalExpiry          DateTime?           @map("tanggal_expiry")
-  kondisiBahan           KondisiBahan        @map("kondisi_bahan")
-  sumberBahan            String?             @map("sumber_bahan") // Dari laporan bahan baku mana
-  catatanPenggunaan      String?             @map("catatan_penggunaan")
-  
+  id                String       @id @default(cuid())
+  namaBahan         String       @map("nama_bahan")
+  jenisBahan        JenisBahan   @map("jenis_bahan")
+  jumlahDigunakan   Float        @map("jumlah_digunakan")
+  satuan            String
+  batchNumber       String?      @map("batch_number") // Untuk traceability
+  tanggalExpiry     DateTime?    @map("tanggal_expiry")
+  kondisiBahan      KondisiBahan @map("kondisi_bahan")
+  sumberBahan       String?      @map("sumber_bahan") // Dari laporan bahan baku mana
+  catatanPenggunaan String?      @map("catatan_penggunaan")
+
   // Relations
-  kegiatanPengolahanId   String              @map("kegiatan_pengolahan_id")
-  kegiatanPengolahan     KegiatanPengolahan  @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
-  laporanBahanBakuId     String?             @map("laporan_bahan_baku_id") // Link ke stok bahan baku
-  laporanBahanBaku       LaporanBahanBaku?   @relation(fields: [laporanBahanBakuId], references: [id])
-  
-  createdAt              DateTime            @default(now()) @map("created_at")
-  updatedAt              DateTime?           @updatedAt @map("updated_at")
-  
+  kegiatanPengolahanId String             @map("kegiatan_pengolahan_id")
+  kegiatanPengolahan   KegiatanPengolahan @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
+  laporanBahanBakuId   String?            @map("laporan_bahan_baku_id") // Link ke stok bahan baku
+  laporanBahanBaku     LaporanBahanBaku?  @relation(fields: [laporanBahanBakuId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   @@map("penggunaan_bahan_baku")
 }
 
 // Kontrol mutu selama proses pengolahan
 model KontrolMutuPengolahan {
-  id                     String              @id @default(cuid())
-  waktuKontrol           DateTime            @map("waktu_kontrol")
-  tahapPengolahan        TahapPengolahan     @map("tahap_pengolahan")
-  suhu                   Float?
-  tekstur                String?
-  warna                  String?
-  aroma                  String?
-  rasa                   String?
-  kebersihanAlat         Boolean             @map("kebersihan_alat")
-  higienePetugas         Boolean             @map("higiene_petugas")
-  statusMutu             StatusMutu          @map("status_mutu")
-  tindakanKoreksi        String?             @map("tindakan_koreksi")
-  fotoEvidence           String[]            @map("foto_evidence")
-  petugasKontrol         String              @map("petugas_kontrol")
-  
+  id              String          @id @default(cuid())
+  waktuKontrol    DateTime        @map("waktu_kontrol")
+  tahapPengolahan TahapPengolahan @map("tahap_pengolahan")
+  suhu            Float?
+  tekstur         String?
+  warna           String?
+  aroma           String?
+  rasa            String?
+  kebersihanAlat  Boolean         @map("kebersihan_alat")
+  higienePetugas  Boolean         @map("higiene_petugas")
+  statusMutu      StatusMutu      @map("status_mutu")
+  tindakanKoreksi String?         @map("tindakan_koreksi")
+  fotoEvidence    String[]        @map("foto_evidence")
+  petugasKontrol  String          @map("petugas_kontrol")
+
   // Relations
-  kegiatanPengolahanId   String              @map("kegiatan_pengolahan_id")
-  kegiatanPengolahan     KegiatanPengolahan  @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
-  
-  createdAt              DateTime            @default(now()) @map("created_at")
-  
+  kegiatanPengolahanId String             @map("kegiatan_pengolahan_id")
+  kegiatanPengolahan   KegiatanPengolahan @relation(fields: [kegiatanPengolahanId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@map("kontrol_mutu_pengolahan")
 }
 
 // Log aktivitas dan audit trail
 model LogAktivitas {
-  id          String      @id @default(cuid())
-  entityType  String      @map("entity_type") // sppg, menu, checklist, etc
-  entityId    String      @map("entity_id")
-  action      String      // create, update, delete, approve, etc
+  id          String   @id @default(cuid())
+  entityType  String   @map("entity_type") // sppg, menu, checklist, etc
+  entityId    String   @map("entity_id")
+  action      String // create, update, delete, approve, etc
   description String
-  oldData     Json?       @map("old_data")
-  newData     Json?       @map("new_data")
-  ipAddress   String?     @map("ip_address")
-  userAgent   String?     @map("user_agent")
-  userId      String      @map("user_id")
-  createdAt   DateTime    @default(now()) @map("created_at")
-  
+  oldData     Json?    @map("old_data")
+  newData     Json?    @map("new_data")
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  userId      String   @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
   @@map("log_aktivitas")
 }
 
@@ -560,144 +615,144 @@ enum StatusMutu {
 
 // Sistem Peringatan dan Notifikasi
 model Peringatan {
-  id                  String             @id @default(cuid())
-  judul               String
-  deskripsi           String
-  jenisPeringatan     JenisPeringatan    @map("jenis_peringatan")
-  tingkatPrioritas    TingkatPrioritas   @map("tingkat_prioritas")
-  statusPeringatan    StatusPeringatan   @default(AKTIF) @map("status_peringatan")
-  entityType          String?            @map("entity_type") // sppg, menu, checklist, dokumen, etc
-  entityId            String?            @map("entity_id")  // ID dari entity terkait
-  dataKonteks         Json?              @map("data_konteks") // Data tambahan untuk konteks
-  
+  id               String           @id @default(cuid())
+  judul            String
+  deskripsi        String
+  jenisPeringatan  JenisPeringatan  @map("jenis_peringatan")
+  tingkatPrioritas TingkatPrioritas @map("tingkat_prioritas")
+  statusPeringatan StatusPeringatan @default(AKTIF) @map("status_peringatan")
+  entityType       String?          @map("entity_type") // sppg, menu, checklist, dokumen, etc
+  entityId         String?          @map("entity_id") // ID dari entity terkait
+  dataKonteks      Json?            @map("data_konteks") // Data tambahan untuk konteks
+
   // Informasi SPPG terkait (opsional, untuk filtering regional)
-  sppgId              String?            @map("sppg_id")
-  sppg                Sppg?              @relation(fields: [sppgId], references: [id])
-  organisasiId        String?            @map("organisasi_id")
-  organisasi          Organisasi?        @relation(fields: [organisasiId], references: [id])
-  
+  sppgId       String?     @map("sppg_id")
+  sppg         Sppg?       @relation(fields: [sppgId], references: [id])
+  organisasiId String?     @map("organisasi_id")
+  organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
   // Informasi tindak lanjut
-  batasWaktuTindakan  DateTime?          @map("batas_waktu_tindakan")
-  tindakanDilakukan   String?            @map("tindakan_dilakukan")
-  hasilTindakan       String?            @map("hasil_tindakan")
-  
+  batasWaktuTindakan DateTime? @map("batas_waktu_tindakan")
+  tindakanDilakukan  String?   @map("tindakan_dilakukan")
+  hasilTindakan      String?   @map("hasil_tindakan")
+
   // Auto-resolve settings
-  autoResolve         Boolean            @default(false) @map("auto_resolve")
-  resolvedAt          DateTime?          @map("resolved_at")
-  resolvedBy          String?            @map("resolved_by")
-  
+  autoResolve Boolean   @default(false) @map("auto_resolve")
+  resolvedAt  DateTime? @map("resolved_at")
+  resolvedBy  String?   @map("resolved_by")
+
   // Audit fields
-  createdBy           String             @map("created_by")
-  createdAt           DateTime           @default(now()) @map("created_at")
-  updatedBy           String?            @map("updated_by")
-  updatedAt           DateTime?          @updatedAt @map("updated_at")
-  
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   // Relations
   notifikasiPeringatan NotifikasiPeringatan[]
-  
+
   @@map("peringatan")
 }
 
 // Notifikasi individual untuk setiap user
 model NotifikasiPeringatan {
-  id            String          @id @default(cuid())
-  peringatanId  String          @map("peringatan_id")
-  peringatan    Peringatan      @relation(fields: [peringatanId], references: [id], onDelete: Cascade)
-  userId        String          @map("user_id")
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id           String     @id @default(cuid())
+  peringatanId String     @map("peringatan_id")
+  peringatan   Peringatan @relation(fields: [peringatanId], references: [id], onDelete: Cascade)
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   // Status notifikasi untuk user ini
-  dibaca        Boolean         @default(false)
-  dibacaAt      DateTime?       @map("dibaca_at")
-  dismiss       Boolean         @default(false) // User bisa dismiss notifikasi
-  dismissAt     DateTime?       @map("dismiss_at")
-  
+  dibaca    Boolean   @default(false)
+  dibacaAt  DateTime? @map("dibaca_at")
+  dismiss   Boolean   @default(false) // User bisa dismiss notifikasi
+  dismissAt DateTime? @map("dismiss_at")
+
   // Channel delivery (untuk future: email, SMS, push notif)
-  channelEmail  Boolean         @default(true) @map("channel_email")
-  channelInApp  Boolean         @default(true) @map("channel_in_app")
-  
-  createdAt     DateTime        @default(now()) @map("created_at")
-  
+  channelEmail Boolean @default(true) @map("channel_email")
+  channelInApp Boolean @default(true) @map("channel_in_app")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@unique([peringatanId, userId])
   @@map("notifikasi_peringatan")
 }
 
 // Konfigurasi aturan peringatan otomatis
 model AturanPeringatan {
-  id                  String             @id @default(cuid())
-  namaAturan          String             @map("nama_aturan")
-  deskripsi           String?
-  jenisPeringatan     JenisPeringatan    @map("jenis_peringatan")
-  tingkatPrioritas    TingkatPrioritas   @map("tingkat_prioritas")
-  
+  id               String           @id @default(cuid())
+  namaAturan       String           @map("nama_aturan")
+  deskripsi        String?
+  jenisPeringatan  JenisPeringatan  @map("jenis_peringatan")
+  tingkatPrioritas TingkatPrioritas @map("tingkat_prioritas")
+
   // Kondisi trigger (dalam format JSON untuk fleksibilitas)
-  kondisiTrigger      Json               @map("kondisi_trigger")
-  
+  kondisiTrigger Json @map("kondisi_trigger")
+
   // Template pesan
-  templateJudul       String             @map("template_judul")
-  templateDeskripsi   String             @map("template_deskripsi")
-  
+  templateJudul     String @map("template_judul")
+  templateDeskripsi String @map("template_deskripsi")
+
   // Settings
-  statusAktif         StatusAktif        @default(AKTIF) @map("status_aktif")
-  autoResolve         Boolean            @default(false) @map("auto_resolve")
-  batasWaktuDefault   Int?               @map("batas_waktu_default") // dalam jam
-  
+  statusAktif       StatusAktif @default(AKTIF) @map("status_aktif")
+  autoResolve       Boolean     @default(false) @map("auto_resolve")
+  batasWaktuDefault Int?        @map("batas_waktu_default") // dalam jam
+
   // Audit fields
-  createdBy           String             @map("created_by")
-  createdAt           DateTime           @default(now()) @map("created_at")
-  updatedBy           String?            @map("updated_by")
-  updatedAt           DateTime?          @updatedAt @map("updated_at")
-  
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   @@map("aturan_peringatan")
 }
 
 // Log eksekusi aturan peringatan (untuk monitoring sistem)
 model LogAturanPeringatan {
-  id                  String             @id @default(cuid())
-  aturanPeringatanId  String             @map("aturan_peringatan_id")
-  statusEksekusi      StatusEksekusi     @map("status_eksekusi")
-  pesanError          String?            @map("pesan_error")
-  jumlahPeringatan    Int                @default(0) @map("jumlah_peringatan") // Berapa peringatan yang dibuat
-  waktuEksekusi       DateTime           @map("waktu_eksekusi")
-  durasiEksekusi      Int?               @map("durasi_eksekusi") // dalam millisecond
-  
-  createdAt           DateTime           @default(now()) @map("created_at")
-  
+  id                 String         @id @default(cuid())
+  aturanPeringatanId String         @map("aturan_peringatan_id")
+  statusEksekusi     StatusEksekusi @map("status_eksekusi")
+  pesanError         String?        @map("pesan_error")
+  jumlahPeringatan   Int            @default(0) @map("jumlah_peringatan") // Berapa peringatan yang dibuat
+  waktuEksekusi      DateTime       @map("waktu_eksekusi")
+  durasiEksekusi     Int?           @map("durasi_eksekusi") // dalam millisecond
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@map("log_aturan_peringatan")
 }
 
 // Enum untuk sistem peringatan
 enum JenisPeringatan {
-  KEPATUHAN_OPERASIONAL    // SPPG tidak lapor, checklist tidak lengkap
-  KEAMANAN_PANGAN         // Suhu tidak sesuai, bahan expired, kontaminasi
-  STANDAR_GIZI            // Menu tidak memenuhi AKG, nutrisi kurang
-  DOKUMEN_KEPATUHAN       // Dokumen expired, sertifikat tidak valid
-  KUALITAS_BAHAN          // Bahan buruk, pemasok bermasalah
-  KAPASITAS_PRODUKSI      // Target tidak tercapai, overload
-  SISTEM_TEKNIS           // Error sistem, koneksi bermasalah
-  AUDIT_INSPEKSI          // Jadwal audit, hasil audit buruk
-  PELATIHAN_SDM           // Training deadline, kompetensi kurang
-  REGULASI_KEBIJAKAN      // Update regulasi, compliance baru
+  KEPATUHAN_OPERASIONAL // SPPG tidak lapor, checklist tidak lengkap
+  KEAMANAN_PANGAN // Suhu tidak sesuai, bahan expired, kontaminasi
+  STANDAR_GIZI // Menu tidak memenuhi AKG, nutrisi kurang
+  DOKUMEN_KEPATUHAN // Dokumen expired, sertifikat tidak valid
+  KUALITAS_BAHAN // Bahan buruk, pemasok bermasalah
+  KAPASITAS_PRODUKSI // Target tidak tercapai, overload
+  SISTEM_TEKNIS // Error sistem, koneksi bermasalah
+  AUDIT_INSPEKSI // Jadwal audit, hasil audit buruk
+  PELATIHAN_SDM // Training deadline, kompetensi kurang
+  REGULASI_KEBIJAKAN // Update regulasi, compliance baru
 }
 
 enum TingkatPrioritas {
-  KRITIS    // Butuh immediate action, affect food safety
-  TINGGI    // Butuh action dalam 24 jam
-  SEDANG    // Butuh action dalam 1-3 hari  
-  RENDAH    // FYI, bisa ditangani dalam seminggu
-  INFO      // Informasi saja, tidak butuh action
+  KRITIS // Butuh immediate action, affect food safety
+  TINGGI // Butuh action dalam 24 jam
+  SEDANG // Butuh action dalam 1-3 hari  
+  RENDAH // FYI, bisa ditangani dalam seminggu
+  INFO // Informasi saja, tidak butuh action
 }
 
 enum StatusPeringatan {
-  AKTIF       // Peringatan masih berlaku
+  AKTIF // Peringatan masih berlaku
   DITINDAKLANJUTI // Sedang dalam proses penanganan
-  SELESAI     // Sudah diselesaikan
-  DIABAIKAN   // User memilih untuk mengabaikan
-  KADALUARSA  // Lewat batas waktu, auto-resolve
+  SELESAI // Sudah diselesaikan
+  DIABAIKAN // User memilih untuk mengabaikan
+  KADALUARSA // Lewat batas waktu, auto-resolve
 }
 
 enum StatusEksekusi {
   BERHASIL
   GAGAL
-  SEBAGIAN  // Sebagian berhasil, sebagian gagal
+  SEBAGIAN // Sebagian berhasil, sebagian gagal
 }

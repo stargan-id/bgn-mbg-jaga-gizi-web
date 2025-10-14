@@ -2,19 +2,19 @@ import { z } from "zod";
 
 // SPPG Schema
 export const sppgSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   nama: z.string().min(1, "Nama SPPG harus diisi"),
   alamat: z.string().min(1, "Alamat harus diisi"),
   kontak: z.string().optional(),
-  kapasitasProduksi: z.number().min(1, "Kapasitas produksi minimal 1 porsi"),
+  kapasitasProduksi: z.coerce.number().min(1, "Kapasitas produksi minimal 1 porsi"),
   statusVerifikasi: z.enum(["DRAFT", "UNDER_REVIEW", "APPROVED", "REJECTED", "SUSPENDED"]),
-  longitude: z.number().optional(),
-  latitude: z.number().optional(),
-  organisasiId: z.string().cuid(),
+  longitude: z.coerce.number().optional(),
+  latitude: z.coerce.number().optional(),
+  organisasiId: z.string(),
   createdBy: z.string(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -27,12 +27,12 @@ export const createSppgSchema = sppgSchema.omit({
 
 // Schema for update (id required, other fields optional)
 export const updateSppgSchema = sppgSchema.partial().extend({
-  id: z.string().cuid(),
+  id: z.string(),
 });
 
 // Schema for verification update (admin only)
 export const verifySppgSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string(),
   statusVerifikasi: z.enum(["APPROVED", "REJECTED", "SUSPENDED"]),
   catatanVerifikasi: z.string().optional(),
 });
