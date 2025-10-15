@@ -2,8 +2,9 @@
 import { getMenuHarianList, getMenuHarianById, createMenuHarian, updateMenuHarian, deleteMenuHarian } from "@/lib/services/menuHarian";
 import { ActionResponse } from "@/actions/response";
 import { CreateMenuHarianData, UpdateMenuHarianData } from "@/types/menu-harian";
+import { MenuHarian } from "@prisma/client";
 
-export async function getMenuHarianListAction(): Promise<ActionResponse<any>> {
+export async function getMenuHarianListAction(): Promise<ActionResponse<MenuHarian[]>> {
   try {
     const data = await getMenuHarianList();
     return { success: true, data };

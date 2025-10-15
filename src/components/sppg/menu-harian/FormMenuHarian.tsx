@@ -10,7 +10,15 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createMenuHarianAction } from "@/actions/menu-harian";
 
-export default function FormMenuHarian() {
+
+interface FormMenuHarianProps {
+  initialValues?: Partial<CreateMenuHarianData>; // 
+  onSubmit: (data: CreateMenuHarianData) => void; // Gunakan tipe OUTPUT untuk onSubmit
+}
+export default function FormMenuHarian({
+  initialValues,
+  onSubmit,
+}: FormMenuHarianProps) {
   const router = useRouter();
 
   // Pola yang Benar:
@@ -22,11 +30,9 @@ export default function FormMenuHarian() {
     reset,
     setValue,
     watch,
-  } = useForm<CreateMenuHarianData>({ // <-- Menggunakan tipe INPUT
+  } = useForm<CreateMenuHarianData>({
     resolver: zodResolver(createMenuHarianSchema),
-    defaultValues: {
-      // defaultValues harus cocok dengan tipe INPUT
-      // Jadi tanggal bisa string, dan angka bisa number
+    defaultValues: initialValues ?? {
       tanggal: new Date(),
       namaMenu: "",
       deskripsi: "",
@@ -61,15 +67,15 @@ export default function FormMenuHarian() {
   };
 
   // 2. onSubmit menggunakan tipe OUTPUT (data bersih setelah divalidasi Zod)
-  const onSubmit = async (data: CreateMenuHarianData) => { // <-- Menggunakan tipe OUTPUT
-    const res = await createMenuHarianAction(data);
-    if (res.success) {
-      reset();
-      router.push("/sppg/menu-harian");
-    } else {
-      alert(res.message || "Gagal menyimpan data. Silakan coba lagi.");
-    }
-  };
+  // const onSubmit = async (data: CreateMenuHarianData) => { // <-- Menggunakan tipe OUTPUT
+  //   const res = await createMenuHarianAction(data);
+  //   if (res.success) {
+  //     reset();
+  //     router.push("/sppg/menu-harian");
+  //   } else {
+  //     alert(res.message || "Gagal menyimpan data. Silakan coba lagi.");
+  //   }
+  // };
 
   const allErrors = Object.entries(errors)
     .filter(([_, err]) => !!err)
@@ -104,7 +110,28 @@ export default function FormMenuHarian() {
           <input
             id="tanggal"
             type="date"
-            {...register("tanggal")} // <-- Cukup register nama field
+            value={(() => {
+              const tgl = watch("tanggal");
+              if (!tgl) return "";
+              if (typeof tgl === "string") {
+                // Jika string sudah yyyy-MM-dd
+                if (/^\d{4}-\d{2}-\d{2}$/.test(tgl)) return tgl;
+                // Jika string ISO
+                if (/^\d{4}-\d{2}-\d{2}T/.test(tgl)) {
+                  // TypeScript: pastikan tgl bertipe string
+                  return (tgl as string).slice(0, 10);
+                }
+                // Jika string lain, coba parse
+                const d = new Date(tgl);
+                if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+                return "";
+              }
+              if (tgl instanceof Date) return tgl.toISOString().slice(0, 10);
+              return "";
+            })()}
+            {...register("tanggal", {
+              setValueAs: (v) => v ? new Date(v) : undefined
+            })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.tanggal ? "border-red-500" : "border-gray-300"
             }`}

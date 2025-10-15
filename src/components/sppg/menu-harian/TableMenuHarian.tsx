@@ -7,15 +7,15 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MenuHarianData } from "@/types/menu-harian";
+import { MenuHarian } from "@prisma/client";
 
 interface Props {
-  data: MenuHarianData[];
+  data: MenuHarian[];
   loading: boolean;
   onDelete: (id: string) => void;
 }
 
-const columns: ColumnDef<MenuHarianData>[] = [
+const columns: ColumnDef<MenuHarian>[] = [
   {
     accessorKey: "tanggal",
     header: "Tanggal",
@@ -39,11 +39,11 @@ const columns: ColumnDef<MenuHarianData>[] = [
   {
     id: "aksi",
     header: "Aksi",
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="flex gap-2">
         <Link href={`/sppg/menu-harian/${row.original.id}`}><Button size="sm">Detil</Button></Link>
         <Link href={`/sppg/menu-harian/${row.original.id}/edit`}><Button size="sm" variant="outline">Edit</Button></Link>
-        <Button size="sm" variant="destructive" onClick={() => row.original.id && row.table.options.meta?.onDelete(row.original.id)}>Hapus</Button>
+        <Button size="sm" variant="destructive" onClick={() => row.original.id && table.options.meta?.onDelete(row.original.id)}>Hapus</Button>
       </div>
     ),
   },
