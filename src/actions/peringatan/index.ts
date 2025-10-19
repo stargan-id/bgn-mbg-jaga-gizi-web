@@ -47,7 +47,10 @@ export async function getPeringatanListAction(
     return {
       success: true,
       message: "Berhasil mengambil daftar peringatan",
-      data: result
+      data: {
+        ...result,
+        data: result.data ?? []
+      }
     };
   } catch (error) {
     console.error("Error in getPeringatanListAction:", error);
@@ -87,7 +90,7 @@ export async function getPeringatanByIdAction(
     return {
       success: true,
       message: "Berhasil mengambil detail peringatan",
-      data: peringatan
+      data: peringatan as PeringatanWithRelations
     };
   } catch (error) {
     console.error("Error in getPeringatanByIdAction:", error);
@@ -141,11 +144,16 @@ export async function updatePeringatanAction(
     const validatedData = updatePeringatanSchema.parse(data);
     
     const peringatan = await updatePeringatan(validatedData);
-    
+    if (!peringatan) {
+      return {
+        success: false,
+        error: "Peringatan tidak ditemukan",
+        message: "Peringatan tidak ditemukan"
+      };
+    }
     // Revalidate cache
     revalidatePath("/dashboard/peringatan");
     revalidatePath(`/dashboard/peringatan/${data.id}`);
-    
     return {
       success: true,
       message: "Berhasil mengupdate peringatan",
@@ -215,11 +223,16 @@ export async function resolvePeringatanAction(
     }
 
     const peringatan = await resolvePeringatan(id, resolvedBy, tindakanDilakukan, hasilTindakan);
-    
+    if (!peringatan) {
+      return {
+        success: false,
+        error: "Peringatan tidak ditemukan",
+        message: "Peringatan tidak ditemukan"
+      };
+    }
     // Revalidate cache
     revalidatePath("/dashboard/peringatan");
     revalidatePath(`/dashboard/peringatan/${id}`);
-    
     return {
       success: true,
       message: "Berhasil menyelesaikan peringatan",

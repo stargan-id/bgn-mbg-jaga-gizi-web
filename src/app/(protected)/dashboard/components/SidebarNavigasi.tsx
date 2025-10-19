@@ -1,11 +1,8 @@
 'use client';
 
-import { SidebarNavigation, MenuItem } from '@/components/navigation';
-import { Home, MapPin, BarChart3, AlertCircle, Settings, Users, FileText, Utensils } from 'lucide-react';
+import { MenuItem, SidebarNavigation } from '@/components/navigation';
+import { AlertCircle, BarChart3, FileText, Home, MapPin, Settings, Users, Utensils } from 'lucide-react';
 
-interface SidebarNavigasiProps {
-  children?: React.ReactNode;
-}
 
 const menuItems: MenuItem[] = [
   {
@@ -45,8 +42,8 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export function SidebarNavigasi({ children }: SidebarNavigasiProps) {
 
+export function SidebarNavigasi() {
   return (
     <SidebarNavigation 
       menuItems={menuItems}
@@ -54,8 +51,6 @@ export function SidebarNavigasi({ children }: SidebarNavigasiProps) {
       subtitle="BGN Command Center"
       headerColor="bg-green-600"
       appIcon={Utensils}
-    >
-      {children}
-    </SidebarNavigation>
+    />
   );
 }

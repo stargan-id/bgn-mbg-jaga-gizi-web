@@ -1,4 +1,4 @@
-import { getMenuHarianByIdAction, updateMenuHarianAction } from "@/actions/menu-harian";
+import { getMenuHarianByIdAction } from "@/actions/menu-harian";
 import { ContainerFormMenuHarian } from "@/components/sppg/menu-harian/ContainerFormMenuHarian";
 
 export const MenuHarianEditPage = async({ params }: { params: Promise<{ id: string }> }) => {
@@ -6,7 +6,7 @@ export const MenuHarianEditPage = async({ params }: { params: Promise<{ id: stri
 
   const result = await getMenuHarianByIdAction(id);
 
-  if(result.success === false) {
+  if(result.success === false || !result.data) {
     return <div>Data tidak ditemukan</div>;
   }
 

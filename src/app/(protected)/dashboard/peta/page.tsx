@@ -1,6 +1,6 @@
+import { getSppgMapDataAction, getSppgStatsAction } from '@/actions/sppg';
 import { ProtectedLayout } from '@/components/layout';
 import { PetaContent } from './components/PetaContent';
-import { getSppgMapDataAction, getSppgStatsAction } from '@/actions/sppg';
 
 export default async function PetaPage() {
   // Fetch SPPG data and stats
@@ -35,7 +35,7 @@ export default async function PetaPage() {
         </div>
       }
     >
-      <PetaContent initialSppgData={sppgData} initialStats={stats} />
+      <PetaContent initialSppgData={sppgData} />
     </ProtectedLayout>
   );
 }

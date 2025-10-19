@@ -355,7 +355,15 @@ export function PeringatanClientPage() {
           data={peringatanList.map(p => ({
             ...p,
             batasWaktuTindakan: p.batasWaktuTindakan ? new Date(p.batasWaktuTindakan) : undefined,
-            createdAt: new Date(p.createdAt)
+            createdAt: new Date(p.createdAt),
+            sppg: p.sppg
+              ? {
+                  nama: p.sppg.nama,
+                  organisasi: {
+                    singkatan: p.sppg.organisasi?.singkatan ?? undefined
+                  }
+                }
+              : undefined
           }))}
         />
       </div>

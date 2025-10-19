@@ -11,7 +11,12 @@ export function ListLaporanBahanBaku() {
   useEffect(() => {
     setLoading(true);
     getLaporanBahanBakuListAction().then((res) => {
-      setData(res.data || []);
+      if (res.success) {
+        setData(res.data || []);
+      } else {
+        setData([]);
+        // Optionally show an error message here
+      }
       setLoading(false);
     });
   }, []);

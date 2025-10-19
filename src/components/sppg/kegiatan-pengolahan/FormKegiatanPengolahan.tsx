@@ -1,19 +1,21 @@
 "use client";
 
+import { createKegiatanPengolahanAction, updateKegiatanPengolahanAction } from "@/actions/kegiatan-pengolahan";
+import { Button } from "@/components/ui/button";
+import { CreateKegiatanPengolahanData, UpdateKegiatanPengolahanData, createKegiatanPengolahanSchema } from "@/zod/schema/kegiatan-pengolahan";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { JenisPengolahan, KegiatanPengolahan } from '@prisma/client';
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createKegiatanPengolahanAction, updateKegiatanPengolahanAction } from "@/actions/kegiatan-pengolahan";
-import { kegiatanPengolahanSchema, CreateKegiatanPengolahanData, UpdateKegiatanPengolahanData, KegiatanPengolahanData } from "@/zod/schema/kegiatan-pengolahan";
-import { Button } from "@/components/ui/button";
 
 
 interface Props {
   mode: "create" | "edit";
-  initialData?: KegiatanPengolahanData;
+  initialData?: KegiatanPengolahan;
+  menuHarianId: string;
 }
 
-export default function FormKegiatanPengolahan({ mode, initialData }: Props) {
+export default function FormKegiatanPengolahan({ mode, menuHarianId, initialData }: Props) {
 
 
   const router = useRouter();
@@ -23,26 +25,24 @@ export default function FormKegiatanPengolahan({ mode, initialData }: Props) {
     formState: { errors, isSubmitting },
     setError,
     reset,
-  } = useForm<KegiatanPengolahanData>({
-    resolver: zodResolver(kegiatanPengolahanSchema),
+  } = useForm<CreateKegiatanPengolahanData>({
+    resolver: zodResolver(createKegiatanPengolahanSchema),
     defaultValues: initialData || {
-      tanggalPengolahan: "",
-      jamMulai: "",
-      jamSelesai: "",
-      jenisPengolahan: "",
+      menuHarianId: menuHarianId,
+      tanggalPengolahan: new Date(),
+      jamMulai: new Date(),
+      jenisPengolahan: JenisPengolahan.KHUSUS,
       targetPorsi: 0,
-      porsiTerealisasi: 0,
-      suhuPengolahan: undefined,
+      suhuPengolahan: 23,
       metodePengolahan: "",
       penanggungJawab: "",
-      statusKegiatan: "BERLANGSUNG",
       catatanProses: "",
       catatanMutu: "",
       fotoProses: [],
     },
   });
 
-  const onSubmit = async (data: KegiatanPengolahanData) => {
+  const onSubmit = async (data: CreateKegiatanPengolahanData) => {
     if (mode === "create") {
       const res = await createKegiatanPengolahanAction(data as CreateKegiatanPengolahanData);
       if (res.success) {
@@ -52,7 +52,11 @@ export default function FormKegiatanPengolahan({ mode, initialData }: Props) {
         setError("tanggalPengolahan", { type: "manual", message: res.error || "Gagal menyimpan data" });
       }
     } else {
-      const res = await updateKegiatanPengolahanAction(data.id!, data as UpdateKegiatanPengolahanData);
+      if (!initialData?.id) {
+        setError("tanggalPengolahan", { type: "manual", message: "ID data tidak ditemukan untuk update." });
+        return;
+      }
+      const res = await updateKegiatanPengolahanAction(initialData.id, data as UpdateKegiatanPengolahanData);
       if (res.success) {
         router.push("/sppg/kegiatan-pengolahan");
       } else {
@@ -111,17 +115,19 @@ export default function FormKegiatanPengolahan({ mode, initialData }: Props) {
             <input type="text" {...register("penanggungJawab")} className="input w-full border rounded px-3 py-2 focus:outline-primary" placeholder="Nama petugas" />
             {errors.penanggungJawab && <span className="text-red-500 text-xs mt-1 block">{errors.penanggungJawab.message}</span>}
           </div>
-          <div>
-            <label className="block mb-1 font-semibold text-gray-700">Status Kegiatan</label>
-            <select {...register("statusKegiatan")} className="input w-full border rounded px-3 py-2 focus:outline-primary">
-              <option value="PERSIAPAN">Persiapan</option>
-              <option value="BERLANGSUNG">Berlangsung</option>
-              <option value="SELESAI">Selesai</option>
-              <option value="DIHENTIKAN">Dihentikan</option>
-              <option value="GAGAL">Gagal</option>
-            </select>
-            {errors.statusKegiatan && <span className="text-red-500 text-xs mt-1 block">{errors.statusKegiatan.message}</span>}
-          </div>
+          {mode === "edit" && (
+            <div>
+              <label className="block mb-1 font-semibold text-gray-700">Status Kegiatan</label>
+              <select {...register("statusKegiatan")} className="input w-full border rounded px-3 py-2 focus:outline-primary">
+                <option value="PERSIAPAN">Persiapan</option>
+                <option value="BERLANGSUNG">Berlangsung</option>
+                <option value="SELESAI">Selesai</option>
+                <option value="DIHENTIKAN">Dihentikan</option>
+                <option value="GAGAL">Gagal</option>
+              </select>
+              {errors.statusKegiatan && <span className="text-red-500 text-xs mt-1 block">{errors.statusKegiatan.message}</span>}
+            </div>
+          )}
           <div className="md:col-span-2">
             <label className="block mb-1 font-semibold text-gray-700">Catatan Proses</label>
             <textarea {...register("catatanProses")} className="input w-full border rounded px-3 py-2 focus:outline-primary" rows={2} placeholder="Catatan proses pengolahan..." />

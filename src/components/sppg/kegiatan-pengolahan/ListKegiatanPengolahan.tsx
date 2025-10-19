@@ -1,20 +1,33 @@
 "use client";
-import { useEffect, useState } from "react";
-import { getKegiatanPengolahanListAction, deleteKegiatanPengolahanAction } from "@/actions/kegiatan-pengolahan";
-import { KegiatanPengolahanData } from "@/types/kegiatan-pengolahan";
+import { deleteKegiatanPengolahanAction, getKegiatanPengolahanListAction } from "@/actions/kegiatan-pengolahan";
 import { Button } from "@/components/ui/button";
+import { KegiatanPengolahanData } from "@/types/kegiatan-pengolahan";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function ListKegiatanPengolahan() {
   const [data, setData] = useState<KegiatanPengolahanData[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     setLoading(true);
-    getKegiatanPengolahanListAction().then((res) => {
-      setData(res.data || []);
-      setLoading(false);
-    });
+    (async () => {
+      try {
+        const result = await getKegiatanPengolahanListAction();
+        if (isMounted && result.success) {
+          setData(result.data || []);
+        }
+      } catch (error) {
+        // Optionally handle error, e.g. show toast
+        if (isMounted) setData([]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleDelete = async (id: string) => {

@@ -1,9 +1,10 @@
 "use server"
 import { ActionResponse } from "@/actions/response";
 import { createLaporanBahanBaku, deleteLaporanBahanBaku, getLaporanBahanBakuById, getLaporanBahanBakuList, updateLaporanBahanBaku } from "@/lib/services/laporanBahanBaku";
-import { CreateLaporanBahanBakuData, LaporanBahanBakuData, UpdateLaporanBahanBakuData } from "@/types/laporan-bahan-baku";
+import { CreateLaporanBahanBakuData, UpdateLaporanBahanBakuData } from "@/types/laporan-bahan-baku";
+import { LaporanBahanBaku } from "@prisma/client";
 
-export async function getLaporanBahanBakuListAction(): Promise<ActionResponse<LaporanBahanBakuData[]>> {
+export async function getLaporanBahanBakuListAction(): Promise<ActionResponse<LaporanBahanBaku[]>> {
   try {
     const data = await getLaporanBahanBakuList();
     return { success: true, data };
@@ -12,7 +13,7 @@ export async function getLaporanBahanBakuListAction(): Promise<ActionResponse<La
   }
 }
 
-export async function getLaporanBahanBakuByIdAction(id: string): Promise<ActionResponse<LaporanBahanBakuData | null>> {
+export async function getLaporanBahanBakuByIdAction(id: string): Promise<ActionResponse<LaporanBahanBaku | null>> {
   try {
     const data = await getLaporanBahanBakuById(id);
     return { success: true, data };
@@ -21,7 +22,7 @@ export async function getLaporanBahanBakuByIdAction(id: string): Promise<ActionR
   }
 }
 
-export async function createLaporanBahanBakuAction(input: CreateLaporanBahanBakuData): Promise<ActionResponse<LaporanBahanBakuData>> {
+export async function createLaporanBahanBakuAction(input: CreateLaporanBahanBakuData): Promise<ActionResponse<LaporanBahanBaku>> {
   try {
     const data = await createLaporanBahanBaku(input);
     return { success: true, data };
@@ -30,7 +31,7 @@ export async function createLaporanBahanBakuAction(input: CreateLaporanBahanBaku
   }
 }
 
-export async function updateLaporanBahanBakuAction(id: string, input: UpdateLaporanBahanBakuData): Promise<ActionResponse<LaporanBahanBakuData>> {
+export async function updateLaporanBahanBakuAction(id: string, input: UpdateLaporanBahanBakuData): Promise<ActionResponse<LaporanBahanBaku>> {
   try {
     const data = await updateLaporanBahanBaku(id, input);
     return { success: true, data };

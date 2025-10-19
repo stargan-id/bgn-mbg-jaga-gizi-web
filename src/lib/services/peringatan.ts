@@ -15,13 +15,13 @@ export type PeringatanWithRelations = Peringatan & {
     alamat: string;
     organisasi: {
       nama: string;
-      singkatan?: string;
+      singkatan?: string | null;
     };
   } | null;
   organisasi?: {
     id: string;
     nama: string;
-    singkatan?: string;
+    singkatan?: string | null;
   } | null;
   notifikasiPeringatan?: NotifikasiPeringatan[];
 };
@@ -36,7 +36,7 @@ export type NotifikasiWithPeringatan = NotifikasiPeringatan & {
 export async function getPeringatanList(
   filters: FilterPeringatanData
 ): Promise<{
-  data: PeringatanWithRelations[];
+  data: PeringatanWithRelations[] | null ;
   totalCount: number;
   totalPages: number;
   currentPage: number;
@@ -131,14 +131,7 @@ export async function getPeringatanList(
             singkatan: true
           }
         },
-        notifikasiPeringatan: {
-          select: {
-            id: true,
-            userId: true,
-            dibaca: true,
-            dismiss: true
-          }
-        }
+        notifikasiPeringatan: true
       },
       orderBy: [
         { tingkatPrioritas: 'asc' }, // KRITIS first
@@ -644,7 +637,7 @@ export async function generateAutomaticAlerts(): Promise<number> {
         entityType: 'dokumen',
         entityId: doc.id,
         autoResolve: false,
-        batasWaktuTindakan: doc.tanggalExpiry,
+        batasWaktuTindakan: doc.tanggalExpiry ?? undefined,
         createdBy: 'system'
       });
       alertsGenerated++;
@@ -683,7 +676,7 @@ export async function generateAutomaticAlerts(): Promise<number> {
         entityType: 'bahan_baku',
         entityId: ingredient.id,
         autoResolve: true,
-        batasWaktuTindakan: ingredient.tanggalExpiry,
+        batasWaktuTindakan: ingredient.tanggalExpiry ?? undefined,
         createdBy: 'system'
       });
       alertsGenerated++;

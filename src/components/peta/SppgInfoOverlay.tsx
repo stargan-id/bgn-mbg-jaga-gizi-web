@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
-import { SppgMapData } from '@/lib/services/sppg';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, MapPin, Phone, Building2, Users, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SppgMapData } from '@/lib/services/sppg';
+import { Building2, Eye, MapPin, Phone, Users, X } from 'lucide-react';
 
 interface SppgInfoOverlayProps {
   sppg: SppgMapData | null;
@@ -45,7 +44,7 @@ export function SppgInfoOverlay({ sppg, onClose, onViewDetail }: SppgInfoOverlay
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/20 z-40"
+        className="fixed inset-0 bg-black/20 z-60"
         onClick={onClose}
       />
       

@@ -5,32 +5,34 @@ export const kegiatanPengolahanSchema = z.object({
   id: z.string(),
   tanggalPengolahan: z.date(),
   jamMulai: z.date(),
-  jamSelesai: z.date().optional(),
+  jamSelesai: z.date(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]),
   targetPorsi: z.number().min(1, "Target porsi minimal 1"),
-  porsiTerealisasi: z.number().min(0).optional(),
-  suhuPengolahan: z.number().min(-50).max(200).optional(), // Suhu dalam Celsius
+  porsiTerealisasi: z.number().min(0).optional().nullable(),
+  suhuPengolahan: z.number().min(-50).max(200).optional().nullable(), // Suhu dalam Celsius
   metodePengolahan: z.string().min(1, "Metode pengolahan harus diisi"),
   penanggungJawab: z.string().min(1, "Penanggung jawab harus diisi"),
   statusKegiatan: z.enum(["PERSIAPAN", "BERLANGSUNG", "SELESAI", "DIHENTIKAN", "GAGAL"]),
-  catatanProses: z.string().optional(),
-  catatanMutu: z.string().optional(),
+  catatanProses: z.string().optional().nullable(),
+  catatanMutu: z.string().optional().nullable(),
   fotoProses: z.array(z.string()),
   sppgId: z.string(),
-  menuHarianId: z.string().optional(),
+  menuHarianId: z.string(),
   createdBy: z.string(),
   createdAt: z.date(),
-  updatedBy: z.string().optional(),
-  updatedAt: z.date().optional(),
+  updatedBy: z.string().optional().nullable(),
+  updatedAt: z.date().optional().nullable(),
 });
 
 // Schema for create (without id and timestamps)
 export const createKegiatanPengolahanSchema = kegiatanPengolahanSchema.omit({
   id: true,
-  statusKegiatan: true, // Will be set to BERLANGSUNG by default
-  jamSelesai: true, // Will be set when activity is completed
-  porsiTerealisasi: true, // Will be updated during/after processing
+  // statusKegiatan: true, // Will be set to BERLANGSUNG by default
+  // jamSelesai: true, // Will be set when activity is completed
+  // porsiTerealisasi: true, // Will be updated during/after processing
+  createdBy: true,
   createdAt: true,
+  updatedBy: true,
   updatedAt: true,
 });
 

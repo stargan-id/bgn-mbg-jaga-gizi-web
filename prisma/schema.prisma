@@ -323,14 +323,14 @@ model MenuHarian {
 // Komponen/ingredient dalam menu
 model KomponenMenu {
   id           String     @id @default(cuid())
-  bahanId      String     @map("bahan_id")
-  bahan        Tkpi       @relation(fields: [bahanId], references: [id], onDelete: Cascade)
-  keterangan   String     @map("keterangan")
+  bahanId      String?     @map("bahan_id")
+  bahan        Tkpi?       @relation(fields: [bahanId], references: [id], onDelete: Cascade)
+  keterangan   String?     @map("keterangan")
   jumlah       Float
   satuan       String // lebih tepatnya satuannya gram atau kg saja, krn pada nilai gizi juga dihitung per 100g
   menuHarianId String     @map("menu_harian_id")
   menuHarian   MenuHarian @relation(fields: [menuHarianId], references: [id], onDelete: Cascade)
-  createdBy    String     @map("created_by")
+  createdBy    String     @map("created_by") @default("system")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedBy    String?    @map("updated_by")
   updatedAt    DateTime?  @updatedAt @map("updated_at")
@@ -415,7 +415,7 @@ model KegiatanPengolahan {
   id                String          @id @default(cuid())
   tanggalPengolahan DateTime        @map("tanggal_pengolahan")
   jamMulai          DateTime        @map("jam_mulai")
-  jamSelesai        DateTime?       @map("jam_selesai")
+  jamSelesai        DateTime       @map("jam_selesai")
   jenisPengolahan   JenisPengolahan @map("jenis_pengolahan")
   targetPorsi       Int             @map("target_porsi")
   porsiTerealisasi  Int?            @map("porsi_terealisasi")
@@ -430,8 +430,8 @@ model KegiatanPengolahan {
   // Relations
   sppgId       String      @map("sppg_id")
   sppg         Sppg        @relation(fields: [sppgId], references: [id], onDelete: Cascade)
-  menuHarianId String?     @map("menu_harian_id")
-  menuHarian   MenuHarian? @relation(fields: [menuHarianId], references: [id])
+  menuHarianId String     @map("menu_harian_id")
+  menuHarian   MenuHarian @relation(fields: [menuHarianId], references: [id])
 
   // Audit fields
   createdBy String    @map("created_by")
