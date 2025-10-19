@@ -6,12 +6,12 @@ export const organisasiSchema = z.object({
   nama: z.string().min(1, "Nama organisasi harus diisi"),
   singkatan: z.string().optional(),
   status: z.enum(["AKTIF", "NON_AKTIF", "DIBUBARKAN"]),
-  tingkat: z.coerce.number().int().optional(),
+  tingkat: z.number().int().optional(),
   indukOrganisasiId: z.string().optional(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -39,7 +39,7 @@ export const logAktivitasSchema = z.object({
   ipAddress: z.string().optional(),
   userAgent: z.string().optional(),
   userId: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
 });
 
 // Schema for create (without id and timestamps)
@@ -50,16 +50,16 @@ export const createLogAktivitasSchema = logAktivitasSchema.omit({
 
 // Dashboard Analytics Schema
 export const dashboardAnalyticsSchema = z.object({
-  startDate: z.coerce.date().optional(),
-  endDate: z.coerce.date().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
   organisasiId: z.string().optional(),
   sppgId: z.string().optional(),
 });
 
 // Compliance Report Schema
 export const complianceReportSchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  startDate: z.date(),
+  endDate: z.date(),
   organisasiIds: z.array(z.string()).optional(),
   sppgIds: z.array(z.string()).optional(),
   includeDetails: z.boolean().default(false),
@@ -71,7 +71,7 @@ export const fileUploadSchema = z.object({
   file: z.instanceof(File, { message: "File harus berupa instance File" }),
   folder: z.string().optional(),
   allowedTypes: z.array(z.string()).optional(),
-  maxSize: z.coerce.number().optional(), // in bytes
+  maxSize: z.number().optional(), // in bytes
 });
 
 // Bulk Operations Schema

@@ -34,7 +34,7 @@ export function NotifikasiDropdownSppg() {
             <span className="font-medium text-sm">Bahan baku diterima</span>
             <span className="text-xs text-gray-500">30 menit lalu</span>
           </div>
-          <span className="text-sm text-gray-600 mt-1">Bahan baku "Ayam" sudah diterima dan diverifikasi.</span>
+          <span className="text-sm text-gray-600 mt-1">Bahan baku &quot;Ayam&quot; sudah diterima dan diverifikasi.</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-center p-2">

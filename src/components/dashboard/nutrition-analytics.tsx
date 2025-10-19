@@ -1,25 +1,24 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { 
-  Apple,
-  TrendingUp,  
-  Target,
-  BarChart3,
-  CheckCircle2,
-  AlertTriangle,
-  Scale,
-  Cookie,
-  Droplets,
-  Zap
-} from "lucide-react";
-import { getNutritionAnalyticsData } from "@/lib/services/dashboard";
-import { formatNumber, formatPercentage } from "@/lib/utils";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { BarChart } from "@/components/charts/bar-chart";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { LineChart } from "@/components/charts/line-chart";
 import { PieChart } from "@/components/charts/pie-chart";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getNutritionAnalyticsData } from "@/lib/services/dashboard";
+import { formatNumber, formatPercentage } from "@/lib/utils";
+import {
+  AlertTriangle,
+  Apple,
+  CheckCircle2,
+  Cookie,
+  Droplets,
+  Scale,
+  Target,
+  Zap
+} from "lucide-react";
 
 export async function NutritionAnalytics() {
   const data = await getNutritionAnalyticsData();

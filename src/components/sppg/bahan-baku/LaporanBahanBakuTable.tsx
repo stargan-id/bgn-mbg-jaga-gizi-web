@@ -1,4 +1,6 @@
 "use client";
+
+import React from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -29,9 +31,9 @@ const columns: ColumnDef<LaporanBahanBakuData>[] = [
     header: "Nama Bahan",
   },
   {
-    accessorKey: "pemasok.nama",
+    accessorKey: "pemasokId",
     header: "Pemasok",
-    cell: ({ row }) => row.original.pemasok?.nama || "-",
+    cell: ({ row }) => row.original.pemasokId ?? "-",
   },
   {
     accessorKey: "jumlah",
@@ -48,19 +50,27 @@ const columns: ColumnDef<LaporanBahanBakuData>[] = [
   {
     id: "aksi",
     header: "Aksi",
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="flex gap-2">
         <Link href={`/sppg/bahan-baku/${row.original.id}`}><Button size="sm">Detil</Button></Link>
         <Link href={`/sppg/bahan-baku/${row.original.id}/edit`}><Button size="sm" variant="outline">Edit</Button></Link>
-        <Button size="sm" variant="destructive" onClick={() => row.original.id && row.table.options.meta?.onDelete(row.original.id)}>Hapus</Button>
+        <Button size="sm" variant="destructive" onClick={() => row.original.id && table.options.meta && table.options.meta.onDelete && table.options.meta.onDelete(row.original.id)}>Hapus</Button>
       </div>
     ),
   },
 ];
 
 export function LaporanBahanBakuTable({ data, loading, onDelete }: Props) {
+  // Paging state
+  const [page, setPage] = React.useState(0);
+  const pageSize = 10;
+  const pageCount = Math.ceil(data.length / pageSize);
+  const pagedData = React.useMemo(() => {
+    const start = page * pageSize;
+    return data.slice(start, start + pageSize);
+  }, [data, page]);
   const table = useReactTable({
-    data,
+    data: pagedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: { onDelete },
@@ -98,6 +108,18 @@ export function LaporanBahanBakuTable({ data, loading, onDelete }: Props) {
           )}
         </tbody>
       </table>
+      {/* Paging controls */}
+      <div className="flex items-center justify-between py-3 px-2">
+        <span className="text-sm text-gray-600">
+          Halaman {page + 1} dari {pageCount}
+        </span>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setPage(0)} disabled={page === 0}>Awal</Button>
+          <Button size="sm" variant="outline" onClick={() => setPage((p) => Math.max(0, p - 1))} disabled={page === 0}>Sebelumnya</Button>
+          <Button size="sm" variant="outline" onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1}>Berikutnya</Button>
+          <Button size="sm" variant="outline" onClick={() => setPage(pageCount - 1)} disabled={page >= pageCount - 1}>Akhir</Button>
+        </div>
+      </div>
     </div>
   );
 }

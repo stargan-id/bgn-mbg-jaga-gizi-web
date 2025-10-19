@@ -11,7 +11,8 @@ Dokumen ini berisi aturan dan praktik terbaik yang wajib diikuti dalam pengemban
       - **Actions (`/actions`)**: Jembatan antara client/server dan logika bisnis. Semua pemanggilan data dari halaman **wajib** melalui *actions*.
       - **Services (`/lib/services`)**: Tempat semua logika bisnis inti dan interaksi langsung dengan database (Prisma) berada.
   - **Struktur Return Actions**: Setiap fungsi *action* **wajib** mengembalikan objek sesuai dengan tipe yang didefinisikan pada `ActionResponse.ts` untuk standarisasi respons.
-  - **Definisi Tipe (Types)**: Setiap fungsi pada *services* harus memiliki *return type* yang jelas dan didefinisikan di dalam direktori `@/types`.
+  - **Definisi Tipe (Types)**: Setiap fungsi pada *services* harus memiliki *return type* yang jelas dan didefinisikan di dalam direktori `@/types`. Hindari penggunaan `any` karena saya punya rule `@typescript-eslint/no-explicit-any`
+  
 
 -----
 
@@ -26,7 +27,7 @@ Konsistensi penamaan adalah kunci utama dalam proyek ini.
       - Nama fungsi pada **Services** menggunakan **Bahasa Inggris** (contoh: `getUserById`, `createProduct`).
       - Nama fungsi pada **Actions** menggunakan **Bahasa Inggris** (contoh: `getUser`, `createProductAction`).
   - **Komponen React**:
-      - Penamaan file dan komponen menggunakan **Bahasa Indonesia** dengan format *PascalCase* (contoh: `TombolSimpan.tsx`, `FormulirPengguna.tsx`).
+      - Penamaan file dan komponen menggunakan **Bahasa Indonesia** dengan format *PascalCase* (contoh: `ButtonSimpan.tsx`, `FormPengguna.tsx`). penggunaan bahasa inggris untuk bagian penamaan yang sudah umum seperti Button, Form, Container, Table, DatePicker diikuti detail komponen dalam bahasa Indonesia ( contoh : `FormBahanBaku` , `ContainerFormBahanBaku`, `TableBahanBaku`, `TanstackTableBahanBaku`, )
   - **Skema Zod**:
       - Menggunakan format `namaObjectSchema` dalam *camelCase* (contoh: `organisasiSchema`, `produkSchema`).
   - **routing**: 
@@ -90,6 +91,9 @@ Konsistensi penamaan adalah kunci utama dalam proyek ini.
 ## 4\. Pengembangan Antarmuka (UI/UX)
 
   - **Modularitas**: Semua halaman **wajib** dibangun menggunakan **komponen modular** yang dapat digunakan kembali. Pecah setiap bagian halaman (seperti header, tabel, form) menjadi komponen tersendiri.
+    - **komponen form**: komponen form dibungkus dalam container sehingga untuk setiap komponen minimal memiliku 2 komponen: 
+    contoh: `ContainerFormBahanBaku` , `FormBahanBaku`, 
+    `ContainerFormBahanBaku` mempunyai props `intialValues` yang sesuai dengan schema yang ada pada `FormBahanBaku`, `FormBahanBaku` mempunya props `onSubmit`. pada  `ContainerFormBahanBaku` akan dibuat fungsi `handleSubmit` yang digunakan untuk props `onSubmit`
   - **Server & Client Component**:
       - Secara *default*, semua halaman adalah **Server Component** untuk performa optimal.
       - Jika sebuah komponen memerlukan *state* atau interaktivitas (contoh: `onClick`, `useState`), bungkus komponen tersebut atau buat sebagai **Client Component** (`'use client'`).

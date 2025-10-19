@@ -2,3 +2,5 @@
 export { StatusIndicator } from './StatusIndicator';
 export { MetricCard, MetricGrid } from './MetricCard';
 export type { MetricData } from './MetricCard';
+export { DatePicker } from './DatePicker';
+export {ImageUploader} from './ImageUploader';

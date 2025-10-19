@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Search, Filter, X, MapPin } from 'lucide-react'
+import { Filter, MapPin, Search, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface SPPGData {
   id: string
@@ -210,7 +209,7 @@ const SearchFilterPanel = ({ sppgData, onFilteredDataChange, className = '' }: S
             <div className="flex flex-wrap gap-1">
               {searchQuery && (
                 <Badge variant="outline" className="text-xs">
-                  Pencarian: "{searchQuery}"
+                  Pencarian: &quot;{searchQuery}&quot;
                 </Badge>
               )}
               {statusFilter !== 'ALL' && (

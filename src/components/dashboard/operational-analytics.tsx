@@ -1,24 +1,24 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { 
-  Activity,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  TrendingUp,
-  Users,
-  Target,
-  BarChart3,
-  Timer,
-  ThermometerSun
-} from "lucide-react";
-import { getOperationalAnalyticsData } from "@/lib/services/dashboard";
-import { formatNumber, formatPercentage, formatTime } from "@/lib/utils";
-import { StatusBadge } from "@/components/ui/status-badge";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { BarChart } from "@/components/charts/bar-chart";
 import { LineChart } from "@/components/charts/line-chart";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getOperationalAnalyticsData } from "@/lib/services/dashboard";
+import { formatNumber, formatPercentage, formatTime } from "@/lib/utils";
+import {
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Target,
+  ThermometerSun,
+  Timer,
+  Users
+} from "lucide-react";
 
 export async function OperationalAnalytics() {
   const data = await getOperationalAnalyticsData();

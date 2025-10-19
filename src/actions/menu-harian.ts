@@ -1,6 +1,6 @@
 "use server"
-import { getMenuHarianList, getMenuHarianById, createMenuHarian, updateMenuHarian, deleteMenuHarian } from "@/lib/services/menuHarian";
 import { ActionResponse } from "@/actions/response";
+import { createMenuHarian, deleteMenuHarian, getMenuHarianById, getMenuHarianList, updateMenuHarian } from "@/lib/services/menuHarian";
 import { CreateMenuHarianData, UpdateMenuHarianData } from "@/types/menu-harian";
 import { MenuHarian } from "@prisma/client";
 
@@ -13,7 +13,7 @@ export async function getMenuHarianListAction(): Promise<ActionResponse<MenuHari
   }
 }
 
-export async function getMenuHarianByIdAction(id: string): Promise<ActionResponse<any>> {
+export async function getMenuHarianByIdAction(id: string): Promise<ActionResponse<MenuHarian|null>> {
   try {
     const data = await getMenuHarianById(id);
     return { success: true, data };
@@ -22,7 +22,7 @@ export async function getMenuHarianByIdAction(id: string): Promise<ActionRespons
   }
 }
 
-export async function createMenuHarianAction(input: CreateMenuHarianData): Promise<ActionResponse<any>> {
+export async function createMenuHarianAction(input: CreateMenuHarianData): Promise<ActionResponse<MenuHarian>> {
   try {
     console.log("Input data:", input);
     const data = await createMenuHarian(input);
@@ -33,7 +33,7 @@ export async function createMenuHarianAction(input: CreateMenuHarianData): Promi
   }
 }
 
-export async function updateMenuHarianAction(id: string, input: UpdateMenuHarianData): Promise<ActionResponse<any>> {
+export async function updateMenuHarianAction(id: string, input: UpdateMenuHarianData): Promise<ActionResponse<MenuHarian>> {
   try {
     const data = await updateMenuHarian(id, input);
     return { success: true, data };
@@ -42,7 +42,7 @@ export async function updateMenuHarianAction(id: string, input: UpdateMenuHarian
   }
 }
 
-export async function deleteMenuHarianAction(id: string): Promise<ActionResponse<any>> {
+export async function deleteMenuHarianAction(id: string): Promise<ActionResponse<null>> {
   try {
     await deleteMenuHarian(id);
     return { success: true, data: null };

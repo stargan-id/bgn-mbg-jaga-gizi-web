@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import ActionableDashboard from '@/components/peta/ActionableDashboard';
 import MapContainerLeaflet from '@/components/peta/MapContainerLeaflet';
 import SearchFilterPanel from '@/components/peta/SearchFilterPanel';
-import ActionableDashboard from '@/components/peta/ActionableDashboard';
 import { SppgInfoOverlay } from '@/components/peta/SppgInfoOverlay';
 import { SppgMapData } from '@/lib/services/sppg';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useMemo, useState } from 'react';
 
 interface PetaContentProps {
   initialSppgData: SppgMapData[];
-  initialStats: any;
 }
 
 interface SPPGData {
@@ -25,7 +24,7 @@ interface SPPGData {
   status: 'AKTIF' | 'TIDAK_AKTIF' | 'PENDING'
 }
 
-export function PetaContent({ initialSppgData, initialStats }: PetaContentProps) {
+export function PetaContent({ initialSppgData }: PetaContentProps) {
   const router = useRouter();
   
   // Transform initial data to SPPGData format

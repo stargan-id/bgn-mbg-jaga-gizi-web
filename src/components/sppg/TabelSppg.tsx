@@ -230,6 +230,7 @@ export function TabelSppg({
                             style={{
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               WebkitBoxOrient: 'vertical' as any
                             }}
                             onClick={() => handleAddressClick(sppg)}

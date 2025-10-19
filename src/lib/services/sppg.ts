@@ -1,5 +1,5 @@
-import { Sppg, StatusVerifikasi } from '@prisma/client';
 import { db } from '@/lib/db';
+import { Sppg, StatusVerifikasi } from '@prisma/client';
 
 export interface SppgStats {
   total: number;
@@ -167,7 +167,7 @@ export interface SppgListResult {
 export async function getSppgList(params: SppgListParams = {}): Promise<SppgListResult> {
   const { search, statusVerifikasi, organisasiId, page = 1, limit = 10 } = params;
   
-  const where: any = {};
+  const where: Record<string, unknown> = {};
   
   if (search) {
     where.OR = [

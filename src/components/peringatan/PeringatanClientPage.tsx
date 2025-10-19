@@ -1,53 +1,35 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  AlertTriangle, 
-  ShieldAlert, 
-  Clock, 
-  CheckCircle, 
-  Search,
-  Filter,
-  RefreshCw,
-  Plus,
-  FileX,
-  Apple,
-  FileWarning,
-  Package,
-  TrendingDown,
-  Server,
-  Users,
-  Scale,
-  Bell,
-  BellOff
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { 
-  type FilterPeringatanData,
-  getPriorityColor,
-  getAlertTypeIcon,
-  getJenisPeringatanLabel,
-  getTingkatPrioritasLabel,
-  getStatusPeringatanLabel
-} from "@/zod/schema/peringatan";
 import { type PeringatanWithRelations } from "@/lib/services/peringatan";
-import { 
-  getPeringatanDashboardSummaryAction,
-  getPeringatanListAction,
-  resolvePeringatanAction
-} from "@/actions/peringatan";
-import { JenisPeringatan, TingkatPrioritas, StatusPeringatan } from "@prisma/client";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import { TabelPeringatan } from "./TabelPeringatan";
-import { StatCard } from "./StatCard";
+import { cn } from "@/lib/utils";
+import {
+  type FilterPeringatanData,
+  getJenisPeringatanLabel,
+  getStatusPeringatanLabel,
+  getTingkatPrioritasLabel
+} from "@/zod/schema/peringatan";
+import { JenisPeringatan, StatusPeringatan, TingkatPrioritas } from "@prisma/client";
+import {
+  AlertTriangle,
+  Bell,
+  Clock,
+  Filter,
+  Plus,
+  RefreshCw,
+  Search,
+  ShieldAlert
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { ChartDistribusiJenis } from "./ChartDistribusiJenis";
+import { StatCard } from "./StatCard";
+import { TabelPeringatan } from "./TabelPeringatan";
 import { TimelinePrioritas } from "./TimelinePrioritas";
 
 // Mock data untuk development - nanti akan diganti dengan data real
@@ -398,7 +380,7 @@ export function PeringatanClientPage() {
               />
             </div>
             
-            <Select value={jenisFilter} onValueChange={(value) => setJenisFilter(value as any)}>
+            <Select value={jenisFilter} onValueChange={(value) => setJenisFilter(value as JenisPeringatan | "ALL")}> 
               <SelectTrigger>
                 <SelectValue placeholder="Jenis Peringatan" />
               </SelectTrigger>
@@ -412,7 +394,7 @@ export function PeringatanClientPage() {
               </SelectContent>
             </Select>
             
-            <Select value={prioritasFilter} onValueChange={(value) => setPrioritasFilter(value as any)}>
+            <Select value={prioritasFilter} onValueChange={(value) => setPrioritasFilter(value as TingkatPrioritas | "ALL")}> 
               <SelectTrigger>
                 <SelectValue placeholder="Prioritas" />
               </SelectTrigger>
@@ -426,7 +408,7 @@ export function PeringatanClientPage() {
               </SelectContent>
             </Select>
             
-            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as any)}>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as StatusPeringatan | "ALL")}> 
               <SelectTrigger>
                 <SelectValue placeholder="Status" />
               </SelectTrigger>

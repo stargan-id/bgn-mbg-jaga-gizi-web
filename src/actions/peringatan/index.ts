@@ -1,31 +1,31 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { 
+import { type ActionResponse } from "@/actions/response";
+import {
+  createPeringatan,
+  deletePeringatan,
+  generateAutomaticAlerts,
+  getNotifikasiForUser,
+  getPeringatanById,
+  getPeringatanDashboardSummary,
+  getPeringatanList,
+  markNotifikasi,
+  resolvePeringatan,
+  updatePeringatan,
+  type NotifikasiWithPeringatan,
+  type PeringatanWithRelations
+} from "@/lib/services/peringatan";
+import {
   createPeringatanSchema,
-  updatePeringatanSchema,
   filterPeringatanSchema,
   markNotifikasiSchema,
-  type FilterPeringatanData,
+  updatePeringatanSchema,
   type CreatePeringatanData,
-  type UpdatePeringatanData,
-  type MarkNotifikasiData
+  type FilterPeringatanData,
+  type MarkNotifikasiData,
+  type UpdatePeringatanData
 } from "@/zod/schema/peringatan";
-import { 
-  getPeringatanList,
-  getPeringatanById,
-  createPeringatan,
-  updatePeringatan,
-  deletePeringatan,
-  resolvePeringatan,
-  getNotifikasiForUser,
-  markNotifikasi,
-  getPeringatanDashboardSummary,
-  generateAutomaticAlerts,
-  type PeringatanWithRelations,
-  type NotifikasiWithPeringatan
-} from "@/lib/services/peringatan";
-import { type ActionResponse } from "@/actions/response";
+import { revalidatePath } from "next/cache";
 
 /**
  * Action untuk mendapatkan daftar peringatan
@@ -37,7 +37,7 @@ export async function getPeringatanListAction(
   totalCount: number;
   totalPages: number;
   currentPage: number;
-}>> {
+} | null>> {
   try {
     // Validasi input
     const validatedFilters = filterPeringatanSchema.parse(filters);
@@ -53,6 +53,7 @@ export async function getPeringatanListAction(
     console.error("Error in getPeringatanListAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengambil daftar peringatan",
       message: error instanceof Error ? error.message : "Gagal mengambil daftar peringatan"
     };
   }
@@ -68,6 +69,7 @@ export async function getPeringatanByIdAction(
     if (!id) {
       return {
         success: false,
+        error: "ID peringatan harus diisi",
         message: "ID peringatan harus diisi"
       };
     }
@@ -77,6 +79,7 @@ export async function getPeringatanByIdAction(
     if (!peringatan) {
       return {
         success: false,
+        error: "Peringatan tidak ditemukan",
         message: "Peringatan tidak ditemukan"
       };
     }
@@ -90,6 +93,7 @@ export async function getPeringatanByIdAction(
     console.error("Error in getPeringatanByIdAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengambil detail peringatan",
       message: error instanceof Error ? error.message : "Gagal mengambil detail peringatan"
     };
   }
@@ -120,6 +124,7 @@ export async function createPeringatanAction(
     console.error("Error in createPeringatanAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal membuat peringatan",
       message: error instanceof Error ? error.message : "Gagal membuat peringatan"
     };
   }
@@ -150,6 +155,7 @@ export async function updatePeringatanAction(
     console.error("Error in updatePeringatanAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengupdate peringatan",
       message: error instanceof Error ? error.message : "Gagal mengupdate peringatan"
     };
   }
@@ -160,11 +166,12 @@ export async function updatePeringatanAction(
  */
 export async function deletePeringatanAction(
   id: string
-): Promise<ActionResponse<void>> {
+): Promise<ActionResponse<null>> {
   try {
     if (!id) {
       return {
         success: false,
+        error: "ID peringatan harus diisi",
         message: "ID peringatan harus diisi"
       };
     }
@@ -176,12 +183,14 @@ export async function deletePeringatanAction(
     
     return {
       success: true,
-      message: "Berhasil menghapus peringatan"
+      message: "Berhasil menghapus peringatan",
+      data: null
     };
   } catch (error) {
     console.error("Error in deletePeringatanAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal menghapus peringatan",
       message: error instanceof Error ? error.message : "Gagal menghapus peringatan"
     };
   }
@@ -200,6 +209,7 @@ export async function resolvePeringatanAction(
     if (!id || !resolvedBy) {
       return {
         success: false,
+        error: "ID peringatan dan user yang menyelesaikan harus diisi",
         message: "ID peringatan dan user yang menyelesaikan harus diisi"
       };
     }
@@ -219,6 +229,7 @@ export async function resolvePeringatanAction(
     console.error("Error in resolvePeringatanAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal menyelesaikan peringatan",
       message: error instanceof Error ? error.message : "Gagal menyelesaikan peringatan"
     };
   }
@@ -231,11 +242,12 @@ export async function getNotifikasiForUserAction(
   userId: string,
   limit: number = 20,
   unreadOnly: boolean = false
-): Promise<ActionResponse<NotifikasiWithPeringatan[]>> {
+): Promise<ActionResponse<NotifikasiWithPeringatan[]| null>> {
   try {
     if (!userId) {
       return {
         success: false,
+          error: "User ID harus diisi",
         message: "User ID harus diisi"
       };
     }
@@ -251,6 +263,7 @@ export async function getNotifikasiForUserAction(
     console.error("Error in getNotifikasiForUserAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengambil notifikasi",
       message: error instanceof Error ? error.message : "Gagal mengambil notifikasi"
     };
   }
@@ -262,11 +275,12 @@ export async function getNotifikasiForUserAction(
 export async function markNotifikasiAction(
   data: MarkNotifikasiData,
   userId: string
-): Promise<ActionResponse<void>> {
+): Promise<ActionResponse<null>> {
   try {
     if (!userId) {
       return {
         success: false,
+        error: "User ID harus diisi",
         message: "User ID harus diisi"
       };
     }
@@ -282,12 +296,14 @@ export async function markNotifikasiAction(
     
     return {
       success: true,
+      data: null,
       message: "Berhasil mengupdate notifikasi"
     };
   } catch (error) {
     console.error("Error in markNotifikasiAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengupdate notifikasi",
       message: error instanceof Error ? error.message : "Gagal mengupdate notifikasi"
     };
   }
@@ -307,7 +323,7 @@ export async function getPeringatanDashboardSummaryAction(
   totalInfo: number;
   peringatanTerbaru: PeringatanWithRelations[];
   distribusiJenis: Record<string, number>;
-}>> {
+} | null>> {
   try {
     const summary = await getPeringatanDashboardSummary(organisasiId);
     
@@ -320,6 +336,7 @@ export async function getPeringatanDashboardSummaryAction(
     console.error("Error in getPeringatanDashboardSummaryAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal mengambil ringkasan dashboard",
       message: error instanceof Error ? error.message : "Gagal mengambil ringkasan dashboard"
     };
   }
@@ -346,6 +363,7 @@ export async function generateAutomaticAlertsAction(): Promise<ActionResponse<nu
     console.error("Error in generateAutomaticAlertsAction:", error);
     return {
       success: false,
+      error: error instanceof Error ? error.message : "Gagal generate peringatan otomatis",
       message: error instanceof Error ? error.message : "Gagal generate peringatan otomatis"
     };
   }

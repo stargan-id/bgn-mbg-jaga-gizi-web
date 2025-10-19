@@ -14,17 +14,17 @@ export const penggunaanBahanBakuSchema = z.object({
     "MINYAK_LEMAK",
     "LAINNYA"
   ]),
-  jumlahDigunakan: z.coerce.number().min(0.01, "Jumlah yang digunakan harus lebih dari 0"),
+  jumlahDigunakan: z.number().min(0.01, "Jumlah yang digunakan harus lebih dari 0"),
   satuan: z.string().min(1, "Satuan harus diisi"),
   batchNumber: z.string().optional(),
-  tanggalExpiry: z.coerce.date().optional(),
+  tanggalExpiry: z.date().optional(),
   kondisiBahan: z.enum(["SANGAT_BAIK", "BAIK", "CUKUP", "BURUK"]),
   sumberBahan: z.string().optional(),
   catatanPenggunaan: z.string().optional(),
   kegiatanPengolahanId: z.string(),
   laporanBahanBakuId: z.string().optional(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -49,7 +49,7 @@ export const bulkCreatePenggunaanBahanBakuSchema = z.object({
 // Schema for validating stock availability
 export const validateStockSchema = z.object({
   laporanBahanBakuId: z.string(),
-  jumlahDigunakan: z.coerce.number().min(0.01, "Jumlah yang digunakan harus lebih dari 0"),
+  jumlahDigunakan: z.number().min(0.01, "Jumlah yang digunakan harus lebih dari 0"),
 });
 
 // Schema for traceability query
@@ -58,8 +58,8 @@ export const traceabilityQuerySchema = z.object({
   laporanBahanBakuId: z.string().optional(),
   namaBahan: z.string().optional(),
   batchNumber: z.string().optional(),
-  tanggalMulai: z.coerce.date().optional(),
-  tanggalSelesai: z.coerce.date().optional(),
+  tanggalMulai: z.date().optional(),
+  tanggalSelesai: z.date().optional(),
 });
 
 // Schema for usage statistics
@@ -75,8 +75,8 @@ export const usageStatisticsSchema = z.object({
     "MINYAK_LEMAK",
     "LAINNYA"
   ]).optional(),
-  tanggalMulai: z.coerce.date(),
-  tanggalSelesai: z.coerce.date(),
+  tanggalMulai: z.date(),
+  tanggalSelesai: z.date(),
   groupBy: z.enum(["HARIAN", "MINGGUAN", "BULANAN"]).default("HARIAN"),
 });
 

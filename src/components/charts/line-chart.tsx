@@ -1,9 +1,9 @@
 "use client";
 
-import { Line, LineChart as RechartsLineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart as RechartsLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface LineChartProps {
-  data: Array<{ [key: string]: any }>;
+  data: Array<{ [key: string]: unknown }>;
   height?: number;
   className?: string;
   xDataKey?: string;

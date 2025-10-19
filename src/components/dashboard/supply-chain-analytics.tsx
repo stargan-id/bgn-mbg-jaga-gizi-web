@@ -1,27 +1,24 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { BarChart } from "@/components/charts/bar-chart";
+import { PieChart } from "@/components/charts/pie-chart";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Package,
-  Truck,
-  TrendingDown,
-  TrendingUp,
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getSupplyChainAnalyticsData } from "@/lib/services/dashboard";
+import { formatCurrency, formatNumber, formatPercentage } from "@/lib/utils";
+import {
   AlertTriangle,
   CheckCircle2,
   Clock,
-  Star,
-  BarChart3,
-  ShoppingCart,
   Factory,
-  Timer
+  Package,
+  Star,
+  TrendingDown,
+  Truck
 } from "lucide-react";
-import { getSupplyChainAnalyticsData } from "@/lib/services/dashboard";
-import { formatNumber, formatPercentage, formatCurrency } from "@/lib/utils";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { BarChart } from "@/components/charts/bar-chart";
-import { LineChart } from "@/components/charts/line-chart";
-import { PieChart } from "@/components/charts/pie-chart";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export async function SupplyChainAnalytics() {
   const data = await getSupplyChainAnalyticsData();

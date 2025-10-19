@@ -17,9 +17,9 @@ export const pemasokSchema = z.object({
   statusAktif: z.enum(["AKTIF", "NON_AKTIF", "DIBUBARKAN"]),
   sertifikat: z.array(z.string()),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)

@@ -13,43 +13,6 @@
 // 4. External cron service
 
 /**
- * VERCEL CRON CONFIGURATION
- * ========================
- * 
- * Buat file vercel.json di root project:
- * 
- * {
- *   "crons": [
- *     {
- *       "path": "/api/peringatan/generate-alerts",
- *       "schedule": "0 */2 * * *"  // Setiap 2 jam
- *     }
- *   ]
- * }
- */
-
-/**
- * GITHUB ACTIONS CONFIGURATION
- * ============================
- * 
- * Buat file .github/workflows/scheduled-alerts.yml:
- * 
- * name: Generate Automatic Alerts
- * on:
- *   schedule:
- *     - cron: '0 */2 * * *'  # Setiap 2 jam
- * 
- * jobs:
- *   generate-alerts:
- *     runs-on: ubuntu-latest
- *     steps:
- *       - name: Call Alert API
- *         run: |
- *           curl -X GET "${{ secrets.APP_URL }}/api/peringatan/generate-alerts" \
- *                -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
- */
-
-/**
  * LOCAL DEVELOPMENT SCHEDULER
  * ===========================
  * 

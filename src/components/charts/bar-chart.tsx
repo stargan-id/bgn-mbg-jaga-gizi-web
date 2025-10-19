@@ -1,9 +1,9 @@
 "use client";
 
-import { Bar, BarChart as RechartsBarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { Bar, CartesianGrid, Legend, BarChart as RechartsBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface BarChartProps {
-  data: Array<{ name: string; value: number; [key: string]: any }>;
+  data: Array<{ name: string; value: number; [key: string]: unknown }>;
   height?: number;
   className?: string;
 }

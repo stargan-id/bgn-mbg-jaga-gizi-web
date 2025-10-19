@@ -3,13 +3,13 @@ import { z } from "zod";
 // Kegiatan Pengolahan Schema
 export const kegiatanPengolahanSchema = z.object({
   id: z.string(),
-  tanggalPengolahan: z.coerce.date(),
-  jamMulai: z.coerce.date(),
-  jamSelesai: z.coerce.date().optional(),
+  tanggalPengolahan: z.date(),
+  jamMulai: z.date(),
+  jamSelesai: z.date().optional(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]),
-  targetPorsi: z.coerce.number().min(1, "Target porsi minimal 1"),
-  porsiTerealisasi: z.coerce.number().min(0).optional(),
-  suhuPengolahan: z.coerce.number().min(-50).max(200).optional(), // Suhu dalam Celsius
+  targetPorsi: z.number().min(1, "Target porsi minimal 1"),
+  porsiTerealisasi: z.number().min(0).optional(),
+  suhuPengolahan: z.number().min(-50).max(200).optional(), // Suhu dalam Celsius
   metodePengolahan: z.string().min(1, "Metode pengolahan harus diisi"),
   penanggungJawab: z.string().min(1, "Penanggung jawab harus diisi"),
   statusKegiatan: z.enum(["PERSIAPAN", "BERLANGSUNG", "SELESAI", "DIHENTIKAN", "GAGAL"]),
@@ -19,9 +19,9 @@ export const kegiatanPengolahanSchema = z.object({
   sppgId: z.string(),
   menuHarianId: z.string().optional(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -42,8 +42,8 @@ export const updateKegiatanPengolahanSchema = kegiatanPengolahanSchema.partial()
 // Schema for completing activity
 export const completeKegiatanPengolahanSchema = z.object({
   id: z.string(),
-  jamSelesai: z.coerce.date(),
-  porsiTerealisasi: z.coerce.number().min(0, "Porsi terealisasi tidak boleh negatif"),
+  jamSelesai: z.date(),
+  porsiTerealisasi: z.number().min(0, "Porsi terealisasi tidak boleh negatif"),
   statusKegiatan: z.enum(["SELESAI", "DIHENTIKAN", "GAGAL"]),
   catatanProses: z.string().optional(),
   catatanMutu: z.string().optional(),
@@ -59,8 +59,8 @@ export const updateStatusKegiatanSchema = z.object({
 // Schema for filtering/searching
 export const filterKegiatanPengolahanSchema = z.object({
   sppgId: z.string().optional(),
-  tanggalMulai: z.coerce.date().optional(),
-  tanggalSelesai: z.coerce.date().optional(),
+  tanggalMulai: z.date().optional(),
+  tanggalSelesai: z.date().optional(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]).optional(),
   statusKegiatan: z.enum(["PERSIAPAN", "BERLANGSUNG", "SELESAI", "DIHENTIKAN", "GAGAL"]).optional(),
   penanggungJawab: z.string().optional(),

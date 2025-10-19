@@ -6,15 +6,15 @@ export const sppgSchema = z.object({
   nama: z.string().min(1, "Nama SPPG harus diisi"),
   alamat: z.string().min(1, "Alamat harus diisi"),
   kontak: z.string().optional(),
-  kapasitasProduksi: z.coerce.number().min(1, "Kapasitas produksi minimal 1 porsi"),
+  kapasitasProduksi: z.number().min(1, "Kapasitas produksi minimal 1 porsi"),
   statusVerifikasi: z.enum(["DRAFT", "UNDER_REVIEW", "APPROVED", "REJECTED", "SUSPENDED"]),
-  longitude: z.coerce.number().optional(),
-  latitude: z.coerce.number().optional(),
+  longitude: z.number().optional(),
+  latitude: z.number().optional(),
   organisasiId: z.string(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)

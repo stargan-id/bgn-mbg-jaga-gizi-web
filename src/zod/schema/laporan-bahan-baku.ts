@@ -3,7 +3,7 @@ import { z } from "zod";
 // Laporan Bahan Baku Schema
 export const laporanBahanBakuSchema = z.object({
   id: z.string(),
-  tanggal: z.coerce.date(),
+  tanggal: z.date(),
   namaBahan: z.string().min(1, "Nama bahan harus diisi"),
   jenisBahan: z.enum([
     "PROTEIN_HEWANI",
@@ -15,19 +15,19 @@ export const laporanBahanBakuSchema = z.object({
     "MINYAK_LEMAK",
     "LAINNYA"
   ]),
-  jumlah: z.coerce.number().min(0.1, "Jumlah harus lebih dari 0"),
+  jumlah: z.number().min(0.1, "Jumlah harus lebih dari 0"),
   satuan: z.string().min(1, "Satuan harus diisi"),
-  tanggalExpiry: z.coerce.date().optional(),
+  tanggalExpiry: z.date().optional().nullable(),
   kondisiBahan: z.enum(["SANGAT_BAIK", "BAIK", "CUKUP", "BURUK"]),
-  suhuPenerimaan: z.coerce.number().optional(),
-  // fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
-  catatan: z.string().optional(),
+  suhuPenerimaan: z.number().optional().nullable(),
+  fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
+  catatan: z.string().optional().nullable(),
   sppgId: z.string(),
   pemasokId: z.string(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
-  updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  createdAt: z.date(),
+  updatedBy: z.string().optional().nullable(),
+  updatedAt: z.date().optional().nullable(),
 });
 
 // Schema for create (without id and timestamps)
@@ -47,7 +47,7 @@ export const updateLaporanBahanBakuSchema = laporanBahanBakuSchema.partial().ext
 
 // Schema for bulk create (multiple ingredients at once)
 export const createBulkLaporanBahanBakuSchema = z.object({
-  tanggal: z.coerce.date(),
+  tanggal: z.date(),
   sppgId: z.string(),
   pemasokId: z.string(),
   bahanBaku: z.array(
@@ -63,11 +63,11 @@ export const createBulkLaporanBahanBakuSchema = z.object({
         "MINYAK_LEMAK",
         "LAINNYA"
       ]),
-      jumlah: z.coerce.number().min(0.1, "Jumlah harus lebih dari 0"),
+      jumlah: z.number().min(0.1, "Jumlah harus lebih dari 0"),
       satuan: z.string().min(1, "Satuan harus diisi"),
-      tanggalExpiry: z.coerce.date().optional(),
+      tanggalExpiry: z.date().optional(),
       kondisiBahan: z.enum(["SANGAT_BAIK", "BAIK", "CUKUP", "BURUK"]),
-      suhuPenerimaan: z.coerce.number().optional(),
+      suhuPenerimaan: z.number().optional(),
       fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
       catatan: z.string().optional(),
     })

@@ -3,7 +3,7 @@ import { z } from "zod";
 // Kontrol Mutu Pengolahan Schema
 export const kontrolMutuPengolahanSchema = z.object({
   id: z.string(),
-  waktuKontrol: z.coerce.date(),
+  waktuKontrol: z.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -12,7 +12,7 @@ export const kontrolMutuPengolahanSchema = z.object({
     "PENYAJIAN",
     "PEMBERSIHAN"
   ]),
-  suhu: z.coerce.number().min(-50).max(200).optional(), // Suhu dalam Celsius
+  suhu: z.number().min(-50).max(200).optional(), // Suhu dalam Celsius
   tekstur: z.string().optional(),
   warna: z.string().optional(),
   aroma: z.string().optional(),
@@ -24,7 +24,7 @@ export const kontrolMutuPengolahanSchema = z.object({
   fotoEvidence: z.array(z.string()),
   petugasKontrol: z.string().min(1, "Petugas kontrol harus diisi"),
   kegiatanPengolahanId: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
 });
 
 // Schema for create (without id and timestamps)
@@ -67,7 +67,7 @@ export const detailedQualityAssessmentSchema = z.object({
     "PENYAJIAN",
     "PEMBERSIHAN"
   ]),
-  suhu: z.coerce.number().min(-50).max(200).optional(),
+  suhu: z.number().min(-50).max(200).optional(),
   sensorikCheck: z.object({
     tekstur: z.string().min(1, "Penilaian tekstur harus diisi"),
     warna: z.string().min(1, "Penilaian warna harus diisi"),
@@ -97,8 +97,8 @@ export const correctiveActionSchema = z.object({
 export const qualityControlReportSchema = z.object({
   kegiatanPengolahanId: z.string().optional(),
   sppgId: z.string().optional(),
-  tanggalMulai: z.coerce.date(),
-  tanggalSelesai: z.coerce.date(),
+  tanggalMulai: z.date(),
+  tanggalSelesai: z.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 
@@ -116,8 +116,8 @@ export const qualityControlReportSchema = z.object({
 export const qualityTrendAnalysisSchema = z.object({
   sppgId: z.string(),
   periode: z.enum(["HARIAN", "MINGGUAN", "BULANAN"]),
-  tanggalMulai: z.coerce.date(),
-  tanggalSelesai: z.coerce.date(),
+  tanggalMulai: z.date(),
+  tanggalSelesai: z.date(),
   tahapPengolahan: z.enum([
     "PERSIAPAN_BAHAN",
     "PENCUCIAN", 

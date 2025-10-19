@@ -1,24 +1,5 @@
 'use client';
 
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,31 +11,48 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { 
-  Clock, 
-  MapPin, 
-  Building2, 
-  CheckCircle, 
-  Eye,
-  AlertTriangle,
-  ChevronLeft,
-  ChevronRight
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { format, formatDistanceToNow } from "date-fns";
-import { id } from "date-fns/locale";
-import { 
-  getPriorityColor,
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { type PeringatanWithRelations } from "@/lib/services/peringatan";
+import {
   getAlertTypeIcon,
   getJenisPeringatanLabel,
-  getTingkatPrioritasLabel,
-  getStatusPeringatanLabel
+  getPriorityColor,
+  getStatusPeringatanLabel,
+  getTingkatPrioritasLabel
 } from "@/zod/schema/peringatan";
-import { type PeringatanWithRelations } from "@/lib/services/peringatan";
+import { format, formatDistanceToNow } from "date-fns";
+import { id } from "date-fns/locale";
 import * as Icons from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertTriangle,
+  Building2,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Eye
+} from "lucide-react";
+import { useState } from "react";
 
 interface TabelPeringatanProps {
   data: PeringatanWithRelations[];
@@ -151,7 +149,7 @@ export function TabelPeringatan({
           </TableHeader>
           <TableBody>
             {data.map((peringatan) => {
-              const IconComponent = Icons[getAlertTypeIcon(peringatan.jenisPeringatan) as keyof typeof Icons] as any;
+              const IconComponent = Icons[getAlertTypeIcon(peringatan.jenisPeringatan) as keyof typeof Icons] as React.ComponentType<{ className?: string }> | undefined;
               const urgencyIndicator = getUrgencyIndicator(peringatan);
               
               return (
@@ -349,7 +347,7 @@ export function TabelPeringatan({
       {/* Mobile Cards */}
       <div className="lg:hidden space-y-4">
         {data.map((peringatan) => {
-          const IconComponent = Icons[getAlertTypeIcon(peringatan.jenisPeringatan) as keyof typeof Icons] as any;
+          const IconComponent = Icons[getAlertTypeIcon(peringatan.jenisPeringatan) as keyof typeof Icons] as React.ComponentType<{ className?: string }> | undefined;
           const urgencyIndicator = getUrgencyIndicator(peringatan);
           
           return (

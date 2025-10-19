@@ -1,14 +1,12 @@
 "use client";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  createMenuHarianSchema,
-  CreateMenuHarianData,
-  CreateMenuHarianInput, // Pastikan ini di-import dari file schema
-} from "@/zod/schema/menu-harian";
 import { Button } from "@/components/ui/button";
+import {
+  CreateMenuHarianData,
+  createMenuHarianSchema
+} from "@/zod/schema/menu-harian";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { createMenuHarianAction } from "@/actions/menu-harian";
+import { useForm } from "react-hook-form";
 
 
 interface FormMenuHarianProps {
@@ -216,6 +214,12 @@ export default function FormMenuHarian({
             type="number"
             min={0}
             step="any"
+            value={(() => {
+              const val = watch("kaloriPerPorsi");
+              if (typeof val === "number") return val.toFixed(2);
+              if (typeof val === "string" && val !== "") return parseFloat(val).toFixed(2);
+              return val ?? "";
+            })()}
             {...register("kaloriPerPorsi", { valueAsNumber: true })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.kaloriPerPorsi ? "border-red-500" : "border-gray-300"
@@ -238,6 +242,12 @@ export default function FormMenuHarian({
             type="number"
             min={0}
             step="any"
+            value={(() => {
+              const val = watch("proteinPerPorsi");
+              if (typeof val === "number") return val.toFixed(2);
+              if (typeof val === "string" && val !== "") return parseFloat(val).toFixed(2);
+              return val ?? "";
+            })()}
             {...register("proteinPerPorsi", { valueAsNumber: true })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.proteinPerPorsi ? "border-red-500" : "border-gray-300"
@@ -260,6 +270,12 @@ export default function FormMenuHarian({
             type="number"
             min={0}
             step="any"
+            value={(() => {
+              const val = watch("karbohidratPerPorsi");
+              if (typeof val === "number") return val.toFixed(2);
+              if (typeof val === "string" && val !== "") return parseFloat(val).toFixed(2);
+              return val ?? "";
+            })()}
             {...register("karbohidratPerPorsi", { valueAsNumber: true })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.karbohidratPerPorsi ? "border-red-500" : "border-gray-300"
@@ -282,6 +298,12 @@ export default function FormMenuHarian({
             type="number"
             min={0}
             step="any"
+            value={(() => {
+              const val = watch("lemakPerPorsi");
+              if (typeof val === "number") return val.toFixed(2);
+              if (typeof val === "string" && val !== "") return parseFloat(val).toFixed(2);
+              return val ?? "";
+            })()}
             {...register("lemakPerPorsi", { valueAsNumber: true })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.lemakPerPorsi ? "border-red-500" : "border-gray-300"
@@ -324,6 +346,12 @@ export default function FormMenuHarian({
             type="number"
             min={0}
             step="any"
+            value={(() => {
+              const val = watch("biayaPerPorsi");
+              if (typeof val === "number") return val.toFixed(2);
+              if (typeof val === "string" && val !== "") return parseFloat(val).toFixed(2);
+              return val ?? "";
+            })()}
             {...register("biayaPerPorsi", { valueAsNumber: true })}
             className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
               errors.biayaPerPorsi ? "border-red-500" : "border-gray-300"

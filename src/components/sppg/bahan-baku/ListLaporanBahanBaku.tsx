@@ -1,9 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
-import { getLaporanBahanBakuListAction, deleteLaporanBahanBakuAction } from "@/actions/laporan-bahan-baku";
+import { deleteLaporanBahanBakuAction, getLaporanBahanBakuListAction } from "@/actions/laporan-bahan-baku";
 import { LaporanBahanBakuData } from "@/types/laporan-bahan-baku";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { LaporanBahanBakuTable } from "./LaporanBahanBakuTable";
 
 export function ListLaporanBahanBaku() {

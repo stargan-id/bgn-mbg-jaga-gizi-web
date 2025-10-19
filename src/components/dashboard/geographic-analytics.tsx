@@ -1,24 +1,18 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { PieChart } from "@/components/charts/pie-chart";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { 
-  MapPin,
-  Globe,
-  Building2,
-  TrendingUp,
-  Users,
-  Target,
-  BarChart3,
-  Navigation,
-  Layers,
-  Map as MapIcon
-} from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getGeographicAnalyticsData } from "@/lib/services/dashboard";
 import { formatNumber, formatPercentage } from "@/lib/utils";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { BarChart } from "@/components/charts/bar-chart";
-import { PieChart } from "@/components/charts/pie-chart";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Globe,
+  Layers,
+  Map as MapIcon,
+  MapPin,
+  Target
+} from "lucide-react";
 
 export async function GeographicAnalytics() {
   const data = await getGeographicAnalyticsData();
@@ -29,15 +23,19 @@ export async function GeographicAnalytics() {
   const avgCapacityPerSppg = totalSppgWithLocation > 0 ? totalCapacity / totalSppgWithLocation : 0;
 
   // Regional distribution
+
   const regionalData = data.regionalStats.map((org: any) => ({
     name: org.nama,
     sppgCount: org._count.sppg,
+  
     totalCapacity: org.sppg.reduce((sum: number, s: any) => sum + s.kapasitasProduksi, 0),
+  
     verifiedCount: org.sppg.filter((s: any) => s.statusVerifikasi === 'APPROVED').length
   }));
 
   // Province/Region concentration
   const provinceConcentration: { [key: string]: number } = {};
+
   data.sppgDistribution.forEach((sppg: any) => {
     // Mock province assignment based on coordinates (simplified)
     let province = 'Jakarta';

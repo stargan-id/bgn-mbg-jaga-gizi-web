@@ -3,7 +3,7 @@ import { z } from "zod";
 // Checklist Harian Schema
 export const checklistHarianSchema = z.object({
   id: z.string(),
-  tanggal: z.coerce.date(),
+  tanggal: z.date(),
   kebersihanSdm: z.boolean({
     message: "Status kebersihan SDM harus diisi",
   }),
@@ -13,16 +13,16 @@ export const checklistHarianSchema = z.object({
   kondisiPeralatan: z.boolean({
     message: "Status kondisi peralatan harus diisi",
   }),
-  suhuPenyimpanan: z.coerce.number().optional(),
+  suhuPenyimpanan: z.number().optional(),
   catatan: z.string().optional(),
   fotoEvidence: z.array(z.string()).min(1, "Minimal 1 foto bukti harus diunggah"),
-  skorKepatuhan: z.coerce.number().min(0).max(100).optional(),
+  skorKepatuhan: z.number().min(0).max(100).optional(),
   status: z.enum(["DRAFT", "SUBMITTED", "REVIEWED"]),
   sppgId: z.string(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)
@@ -47,7 +47,7 @@ export const submitChecklistSchema = z.object({
 // Schema for review (admin only)
 export const reviewChecklistSchema = z.object({
   id: z.string(),
-  skorKepatuhan: z.coerce.number().min(0).max(100),
+  skorKepatuhan: z.number().min(0).max(100),
   catatan: z.string().optional(),
 });
 

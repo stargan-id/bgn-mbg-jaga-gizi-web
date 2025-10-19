@@ -17,9 +17,9 @@ export const menuHarianSchema = z.object({
   fotoMenu: z.array(z.string()),
   sppgId: z.string(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export const createMenuHarianSchema = menuHarianSchema.omit({

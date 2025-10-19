@@ -26,8 +26,8 @@ export const startKegiatanPengolahanSchema = z.object({
 // Schema untuk menyelesaikan kegiatan pengolahan dengan kontrol mutu akhir
 export const completeKegiatanWithQualityControlSchema = z.object({
   id: z.string(),
-  jamSelesai: z.coerce.date(),
-  porsiTerealisasi: z.coerce.number().min(0, "Porsi terealisasi tidak boleh negatif"),
+  jamSelesai: z.date(),
+  porsiTerealisasi: z.number().min(0, "Porsi terealisasi tidak boleh negatif"),
   statusKegiatan: z.enum(["SELESAI", "DIHENTIKAN", "GAGAL"]),
   catatanProses: z.string().optional(),
   catatanMutu: z.string().optional(),
@@ -53,7 +53,7 @@ export const updateKegiatanWithBahanBakuSchema = z.object({
 // Schema untuk laporan kegiatan pengolahan harian
 export const laporanKegiatanHarianSchema = z.object({
   sppgId: z.string(),
-  tanggal: z.coerce.date(),
+  tanggal: z.date(),
   includeDetails: z.boolean().default(true),
   includeBahanBaku: z.boolean().default(true),
   includeKontrolMutu: z.boolean().default(true),
@@ -63,8 +63,8 @@ export const laporanKegiatanHarianSchema = z.object({
 // Schema untuk dashboard pengolahan
 export const dashboardPengolahanSchema = z.object({
   sppgId: z.string().optional(),
-  tanggalMulai: z.coerce.date().optional(),
-  tanggalSelesai: z.coerce.date().optional(),
+  tanggalMulai: z.date().optional(),
+  tanggalSelesai: z.date().optional(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]).optional(),
   statusKegiatan: z.enum(["PERSIAPAN", "BERLANGSUNG", "SELESAI", "DIHENTIKAN", "GAGAL"]).optional(),
   includeMetrics: z.boolean().default(true),
@@ -75,8 +75,8 @@ export const dashboardPengolahanSchema = z.object({
 export const analisisEfisiensiSchema = z.object({
   sppgId: z.string(),
   periode: z.enum(["HARIAN", "MINGGUAN", "BULANAN"]),
-  tanggalMulai: z.coerce.date(),
-  tanggalSelesai: z.coerce.date(),
+  tanggalMulai: z.date(),
+  tanggalSelesai: z.date(),
   jenisPengolahan: z.enum(["SARAPAN", "MAKAN_SIANG", "MAKAN_MALAM", "SNACK", "KHUSUS"]).optional(),
   metrik: z.array(z.enum([
     "WAKTU_PENGOLAHAN",
@@ -115,7 +115,7 @@ export const haccpComplianceSchema = z.object({
   })),
   overallCompliance: z.boolean(),
   verifiedBy: z.string().min(1, "Verifikator harus diisi"),
-  verificationDate: z.coerce.date(),
+  verificationDate: z.date(),
 });
 
 // Type exports

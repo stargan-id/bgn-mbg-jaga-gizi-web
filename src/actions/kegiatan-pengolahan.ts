@@ -1,8 +1,9 @@
-import { getKegiatanPengolahanList, getKegiatanPengolahanById, createKegiatanPengolahan, updateKegiatanPengolahan, deleteKegiatanPengolahan } from "@/lib/services/kegiatanPengolahan";
 import { ActionResponse } from "@/actions/response";
+import { createKegiatanPengolahan, deleteKegiatanPengolahan, getKegiatanPengolahanById, getKegiatanPengolahanList, updateKegiatanPengolahan } from "@/lib/services/kegiatanPengolahan";
 import { CreateKegiatanPengolahanData, UpdateKegiatanPengolahanData } from "@/types/kegiatan-pengolahan";
+import { KegiatanPengolahan } from "@prisma/client";
 
-export async function getKegiatanPengolahanListAction(): Promise<ActionResponse> {
+export async function getKegiatanPengolahanListAction(): Promise<ActionResponse<KegiatanPengolahan[]>> {
   try {
     const data = await getKegiatanPengolahanList();
     return { success: true, data };
@@ -11,7 +12,7 @@ export async function getKegiatanPengolahanListAction(): Promise<ActionResponse>
   }
 }
 
-export async function getKegiatanPengolahanByIdAction(id: string): Promise<ActionResponse> {
+export async function getKegiatanPengolahanByIdAction(id: string): Promise<ActionResponse<KegiatanPengolahan|null>> {
   try {
     const data = await getKegiatanPengolahanById(id);
     return { success: true, data };
@@ -20,7 +21,7 @@ export async function getKegiatanPengolahanByIdAction(id: string): Promise<Actio
   }
 }
 
-export async function createKegiatanPengolahanAction(input: CreateKegiatanPengolahanData): Promise<ActionResponse> {
+export async function createKegiatanPengolahanAction(input: CreateKegiatanPengolahanData): Promise<ActionResponse<KegiatanPengolahan>> {
   try {
     const data = await createKegiatanPengolahan(input);
     return { success: true, data };
@@ -29,7 +30,7 @@ export async function createKegiatanPengolahanAction(input: CreateKegiatanPengol
   }
 }
 
-export async function updateKegiatanPengolahanAction(id: string, input: UpdateKegiatanPengolahanData): Promise<ActionResponse> {
+export async function updateKegiatanPengolahanAction(id: string, input: UpdateKegiatanPengolahanData): Promise<ActionResponse<KegiatanPengolahan>> {
   try {
     const data = await updateKegiatanPengolahan(id, input);
     return { success: true, data };
@@ -38,10 +39,10 @@ export async function updateKegiatanPengolahanAction(id: string, input: UpdateKe
   }
 }
 
-export async function deleteKegiatanPengolahanAction(id: string): Promise<ActionResponse> {
+export async function deleteKegiatanPengolahanAction(id: string): Promise<ActionResponse<null>> {
   try {
     await deleteKegiatanPengolahan(id);
-    return { success: true };
+    return { success: true, data:null };
   } catch (e) {
     return { success: false, error: "Gagal menghapus data" };
   }

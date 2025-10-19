@@ -1,11 +1,11 @@
 import { db } from "@/lib/db";
-import { type Peringatan, type NotifikasiPeringatan, Prisma } from "@prisma/client";
-import { 
-  type FilterPeringatanData,
+import {
   type CreatePeringatanData,
-  type UpdatePeringatanData,
-  type MarkNotifikasiData
+  type FilterPeringatanData,
+  type MarkNotifikasiData,
+  type UpdatePeringatanData
 } from "@/zod/schema/peringatan";
+import { type NotifikasiPeringatan, type Peringatan, Prisma } from "@prisma/client";
 
 // Type untuk peringatan dengan relasi
 export type PeringatanWithRelations = Peringatan & {
@@ -262,7 +262,7 @@ export async function createPeringatan(
  */
 export async function updatePeringatan(
   data: UpdatePeringatanData
-): Promise<PeringatanWithRelations> {
+): Promise<PeringatanWithRelations | null> {
   try {
     const { id, ...updateData } = data;
     
@@ -295,6 +295,7 @@ export async function updatePeringatan(
     });
 
     return peringatan;
+
   } catch (error) {
     console.error('Error updating peringatan:', error);
     throw new Error('Failed to update peringatan');

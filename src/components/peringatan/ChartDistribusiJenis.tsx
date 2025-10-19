@@ -1,9 +1,9 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getJenisPeringatanLabel, getAlertTypeIcon } from "@/zod/schema/peringatan";
-import { JenisPeringatan } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import { getAlertTypeIcon, getJenisPeringatanLabel } from "@/zod/schema/peringatan";
+import { JenisPeringatan } from "@prisma/client";
 import * as Icons from "lucide-react";
 
 interface ChartDistribusiJenisProps {
@@ -66,7 +66,7 @@ export function ChartDistribusiJenis({ data }: ChartDistribusiJenisProps) {
           {/* Legend */}
           <div className="space-y-2">
             {chartData.map(({ jenis, count, percentage }) => {
-              const IconComponent = Icons[getAlertTypeIcon(jenis) as keyof typeof Icons] as any;
+              const IconComponent = Icons[getAlertTypeIcon(jenis) as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
               
               return (
                 <div key={jenis} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">

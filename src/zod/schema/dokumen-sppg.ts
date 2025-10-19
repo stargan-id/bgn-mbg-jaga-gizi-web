@@ -14,16 +14,16 @@ export const dokumenSppgSchema = z.object({
   ]),
   namaDokumen: z.string().min(1, "Nama dokumen harus diisi"),
   nomorDokumen: z.string().optional(),
-  tanggalTerbit: z.coerce.date(),
-  tanggalExpiry: z.coerce.date().optional(),
+  tanggalTerbit: z.date(),
+  tanggalExpiry: z.date().optional(),
   filePath: z.string().min(1, "File harus diunggah"),
   statusDokumen: z.enum(["PENDING", "APPROVED", "REJECTED", "EXPIRED"]),
   catatanReview: z.string().optional(),
   sppgId: z.string(),
   createdBy: z.string(),
-  createdAt: z.coerce.date(),
+  createdAt: z.date(),
   updatedBy: z.string().optional(),
-  updatedAt: z.coerce.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Schema for create (without id and timestamps)

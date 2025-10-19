@@ -1,34 +1,32 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Plus, 
-  Building2, 
-  CheckCircle, 
-  Clock, 
-  XCircle, 
-  AlertTriangle,
-  Ban,
-  BarChart3
-} from "lucide-react";
-import { TabelSppg } from "@/components/sppg/TabelSppg";
+import { getOrganisasiOptionsAction } from "@/actions/organisasi";
+import {
+  createSppgAction,
+  deleteSppgAction,
+  getSppgListAction,
+  getSppgStatsAction,
+  updateSppgAction
+} from "@/actions/sppg";
 import { FormSppg } from "@/components/sppg/FormSppg";
 import { ModalKonfirmasiHapus } from "@/components/sppg/ModalKonfirmasiHapus";
-import { 
-  getSppgListAction, 
-  createSppgAction, 
-  updateSppgAction, 
-  deleteSppgAction,
-  getSppgStatsAction
-} from "@/actions/sppg";
-import { getOrganisasiOptionsAction } from "@/actions/organisasi";
-import { toast } from "sonner";
-import { type SppgWithOrganisasi } from "@/lib/services/sppg";
+import { TabelSppg } from "@/components/sppg/TabelSppg";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type OrganisasiOption } from "@/lib/services/organisasi";
+import { type SppgWithOrganisasi } from "@/lib/services/sppg";
 import { StatusVerifikasi } from "@prisma/client";
+import {
+  AlertTriangle,
+  BarChart3,
+  Building2,
+  CheckCircle,
+  Clock,
+  Plus,
+  XCircle
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type ViewMode = 'list' | 'form';
 
@@ -213,7 +211,7 @@ export default function SppgClientPage() {
   }: {
     title: string;
     count: number;
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     variant: "default" | "secondary" | "destructive" | "outline";
     color: string;
   }) => (
