@@ -1,9 +1,9 @@
 'use client'
 
-import { Marker, Popup } from 'react-leaflet'
-import { Icon, LatLngExpression } from 'leaflet'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Icon, LatLngExpression } from 'leaflet'
+import { Marker, Popup } from 'react-leaflet'
 
 interface SPPGData {
   id: string
@@ -62,17 +62,20 @@ const getStatusBadgeVariant = (status: string) => {
   }
 }
 
-const MarkerWithPopup = ({ data, onMarkerClick }: MarkerWithPopupProps) => {
-  const position: LatLngExpression = [data.latitude, data.longitude]
+import React, { useCallback, useMemo } from 'react'
 
-  const handleMarkerClick = () => {
+const MarkerWithPopup = ({ data, onMarkerClick }: MarkerWithPopupProps) => {
+  const position: LatLngExpression = useMemo(() => [data.latitude, data.longitude], [data.latitude, data.longitude])
+  const icon = useMemo(() => createIcon(data.status), [data.status])
+
+  const handleMarkerClick = useCallback(() => {
     onMarkerClick?.(data)
-  }
+  }, [onMarkerClick, data])
 
   return (
     <Marker 
       position={position} 
-      icon={createIcon(data.status)}
+      icon={icon}
       eventHandlers={{
         click: handleMarkerClick,
       }}
@@ -105,4 +108,4 @@ const MarkerWithPopup = ({ data, onMarkerClick }: MarkerWithPopupProps) => {
   )
 }
 
-export default MarkerWithPopup
+export default React.memo(MarkerWithPopup)
