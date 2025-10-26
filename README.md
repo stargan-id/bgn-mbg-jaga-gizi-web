@@ -29,3 +29,17 @@ GRANT ALL PRIVILEGES ON DATABASE jagagizi_db TO jagagizi_user;
 ```psql
 \password
 ```
+
+## setup certbot
+
+```sh
+sudo certbot certonly --nginx -d jagagizi.stargan.id
+```
+
+setup site-available/jagagizi
+
+```sh
+sudo nginx -t
+sudo systemctl reload nginx
+sudo systemctl start nginx
+```

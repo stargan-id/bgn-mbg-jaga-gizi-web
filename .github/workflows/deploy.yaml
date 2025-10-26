@@ -59,7 +59,7 @@ jobs:
         run: pnpm run build # Use pnpm to build the application
 
       - name: Archive build artifacts
-        run: tar -czf build.tar.gz .next public
+        run: tar -czf build.tar.gz .next public package.json pnpm-lock.yaml
 
       # - name: Deploy to VPS
       #   uses: appleboy/scp-action@v0.1.1
@@ -79,11 +79,11 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
           tar -xzf ${{ secrets.DIR_TARGET }}/build.tar.gz -C ${{ secrets.DIR_TARGET }}
           cd ${{ secrets.DIR_TARGET }}
-          git pull origin main
+          # git pull origin main
           source ~/.bashrc
           source ~/.profile
           export PATH="$HOME/.local/bin:$HOME/.nvm/versions/node/${{ secrets.NODE_VERSION }}/bin:$PATH" # Use secrets for pnpm path"
           pm2 stop jagagizi || true
           pnpm install
-          pm2 restart jagagizi || pm2 start pnpm --name jagagizi -- start -p 3030
+          pm2 restart jagagizi || pm2 start pnpm --name jagagizi -- start -p 3060
           EOF
