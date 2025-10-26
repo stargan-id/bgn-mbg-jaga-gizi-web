@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
-
+    environment: jagagizi.stargan.id
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
