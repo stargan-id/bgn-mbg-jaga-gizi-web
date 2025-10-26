@@ -41,14 +41,14 @@ jobs:
       #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
       #   run: npx prisma migrate deploy
 
-      - name: Run Prisma Database Push and Generate
+      - name: Run Prisma Database Push/Deploy and Generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }} # Existing secret
         # run: pnpm run prisma:db-push
         run: |
-          # pnpm run prisma:db-push
+          pnpm run prisma:db-push
           # pnpm run prisma:baseline
-          pnpm run prisma:deploy
+          # pnpm run prisma:deploy
           pnpm run prisma:generate
 
       - name: Build the application
