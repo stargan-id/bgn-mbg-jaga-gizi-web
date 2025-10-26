@@ -1,0 +1,85 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20" # Use the appropriate Node.js version
+
+      - name: check Node.js version
+        run: node -v
+
+      - name: Install pnpm
+        run: npm install -g pnpm # Install pnpm globally
+
+      - name: Install dependencies
+        run: pnpm install # Use pnpm to install dependencies
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create SSH tunnel to database
+        run: |
+          ssh -f -N -L 5432:localhost:5432 -L 6379:localhost:6379  -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      # - name: Run Prisma Migrations
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      #   run: npx prisma migrate deploy
+
+      - name: Run Prisma Database Push and Generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Existing secret
+        # run: pnpm run prisma:db-push
+        run: |
+          # pnpm run prisma:db-push
+          # pnpm run prisma:baseline
+          pnpm run prisma:deploy
+          pnpm run prisma:generate
+
+      - name: Build the application
+        env:
+          DATABASE_URL_ADMIN: ${{ secrets.DATABASE_URL }} # Existing secret
+          # BASE_PATH_UPLOAD: ${{ secrets.BASE_PATH_UPLOAD }}
+          # BASE_PATH_UPLOAD_CHUNK: ${{ secrets.BASE_PATH_UPLOAD_CHUNK }}
+        run: pnpm run build # Use pnpm to build the application
+
+      - name: Archive build artifacts
+        run: tar -czf build.tar.gz .next public
+
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@v0.1.1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "build.tar.gz"
+          target: ${{ secrets.DIR_TARGET }}
+
+      - name: Extract and restart service on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          tar -xzf ${{ secrets.DIR_TARGET }}/build.tar.gz -C ${{ secrets.DIR_TARGET }}
+          cd ${{ secrets.DIR_TARGET }}
+          git pull origin main
+          source ~/.bashrc
+          source ~/.profile
+          export PATH="$HOME/.local/bin:$HOME/.nvm/versions/node/${{ secrets.NODE_VERSION }}/bin:$PATH" # Use secrets for pnpm path"
+          pm2 stop jagagizi || true
+          pnpm install
+          pm2 restart jagagizi || pm2 start pnpm --name jagagizi -- start -p 3030
+          EOF
