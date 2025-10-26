@@ -61,14 +61,18 @@ jobs:
       - name: Archive build artifacts
         run: tar -czf build.tar.gz .next public
 
+      # - name: Deploy to VPS
+      #   uses: appleboy/scp-action@v0.1.1
+      #   with:
+      #     host: ${{ secrets.VPS_HOST }}
+      #     username: ${{ secrets.VPS_USER }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     source: "build.tar.gz"
+      #     target: ${{ secrets.DIR_TARGET }}
+      
       - name: Deploy to VPS
-        uses: appleboy/scp-action@v0.1.1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build.tar.gz"
-          target: ${{ secrets.DIR_TARGET }}
+        run: |
+          scp -o StrictHostKeyChecking=no build.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:${{ secrets.DIR_TARGET }}/build.tar.gz
 
       - name: Extract and restart service on VPS
         run: |
