@@ -46,7 +46,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }} # Existing secret
         # run: pnpm run prisma:db-push
         run: |
-          pnpm run prisma:db-push
+          pnpm run prisma:dbpush
           # pnpm run prisma:baseline
           # pnpm run prisma:deploy
           pnpm run prisma:generate
